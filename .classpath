@@ -2,5 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/Michiel/Downloads/sqljdbc_6.4/enu/mssql-jdbc-6.4.0.jre9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
