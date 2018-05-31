@@ -5,6 +5,12 @@
  */
 package ldh.coffie.pkg723;
 
+import java.beans.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  *
  * @author Danny
@@ -14,9 +20,12 @@ public class LDHCoffie723 {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-      System.out.println("Login to Database Server");  
-      
-    }
     
+    static ConnectionDatabase ConnDb;
+    private static Connection mainConn;
+    public static void main(String[] args) {
+    ConnDb = new ConnectionDatabase();        
+   
+   
+}
 }
