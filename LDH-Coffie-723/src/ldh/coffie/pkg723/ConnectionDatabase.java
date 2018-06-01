@@ -21,7 +21,7 @@ public class ConnectionDatabase {
     private static String username = "TestDB";   
     private static String password = "1234567";
     private static Connection conn;
-    
+        
     public ConnectionDatabase(){
     }
    
@@ -44,14 +44,12 @@ public class ConnectionDatabase {
       
        finally{
             conn.close();
-            System.out.println("Verbinding afgesloten");
-               
+            System.out.println( "Verbinding afgesloten");
                }   
       }
       
       catch(SQLException e){
-            System.out.println("Foutmelding:" + e.getMessage());
-      
+           System.out.println("Foutmelding:" + e.getMessage());
       }
     return conn;
     }

@@ -21,11 +21,12 @@ public class LDHCoffie723 {
      * @param args the command line arguments
      */
     
-    static ConnectionDatabase ConnDb;
-    private static Connection mainConn;
+    static ConnectionDatabase connDb;
+    static Connection conn;
     public static void main(String[] args) {
-    ConnDb = new ConnectionDatabase();        
+    connDb = new ConnectionDatabase();        
    
+    conn = connDb.getConnection();
    
 }
 }
