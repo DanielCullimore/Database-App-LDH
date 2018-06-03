@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -16,12 +17,30 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class Layout extends Application implements EventHandler<ActionEvent> {
+
+	// Login
+	Scene login;
+	Image logo;
+	ImageView legerIcon;
+	Label loginText;
+	TextField loginName;
+	Button loginButton;
+
+	// Checker
+	Scene checker;
+	BorderPane outer;
+	BorderPane layout;
 
 	Button button;
 	static Stage window;
@@ -39,7 +58,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 	Label profitLabel;
 	Label ADLabel;
 	Label CleverLabel;
-	
+
 	TableView<ProfitEntry> profitTable;
 	TableView<mock> adTable;
 	TableView<mock> cleverTable;
@@ -47,48 +66,78 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 	TableColumn<ProfitEntry, Date> StartContract;
 	TableColumn<ProfitEntry, Date> EndContract;
 
+	GridPane loginScreen;
+
 	Label bRule1;
 	Label bRule2;
-	Label bRule3;
-	Label bRule4;
+	static Label bRule3;
+	static Label bRule4;
 	Label bRule5;
 	Label bRule6;
 	Label bRule7;
 	Label bRule8;
 	Label bRule9;
 	Label rapport;
+	TextArea rapportText;
+
+	static Rectangle r;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void start(Stage primaryStage) {
 		window = primaryStage;
-		window.setTitle("Project LDH");
-		button = new Button();
-		button.setText("Load Data");
+		window.setTitle("Leger Des Heils: Database Checker");
 
-		BorderPane outer = new BorderPane();
+		// Login Setup
+		loginScreen = new GridPane();
+		loginScreen.setVgap(10);
+		loginScreen.setHgap(10);
 
+		logo = new Image("/legerIcon.png");
+		legerIcon = new ImageView(logo);
 
-		button.setOnAction(e -> action.LoadProfit());
+		GridPane.setConstraints(legerIcon, 0, 0, 4, 1);
 
-		BorderPane layout = new BorderPane();
-		layout.getChildren().add(button);
-		Scene scene = new Scene(outer, 300, 250);
-		window.setScene(scene);
+		loginText = new Label("Gebruikersnaam:");
+		loginText.setMinWidth((logo.getWidth() / 2) - 5);
+
+		loginText.setFont(new Font(25));
+		GridPane.setConstraints(loginText, 0, 1);
+
+		loginName = new TextField();
+		loginName.setMinWidth((logo.getWidth() / 2) - 5);
+		GridPane.setConstraints(loginName, 1, 1);
+
+		loginButton = new Button("Login");
+		loginButton.setMinWidth(logo.getWidth() + 10);
+		loginButton.setOnAction(e -> window.setScene(checker));
+		GridPane.setConstraints(loginButton, 0, 2, 2, 1);
+
+		loginScreen.getChildren().addAll(legerIcon, loginText, loginName, loginButton);
+
+		loginScreen.setAlignment(Pos.CENTER);
+		login = new Scene(loginScreen);
+
+		// Set log in
+		window.setScene(login);
 		window.show();
 
 		window.setOnCloseRequest(e -> closeProgram());
 
-		//Flowpane op top met alle knoppen
+		primaryStage.setResizable(false);
+
+		window.setMaximized(true);
+		window.setFullScreen(true);
+
+		// More info dingen en adere shit
+		// Flowpane op top met alle knoppen
 		FlowPane top = new FlowPane();
 		loadAD = new Button("Ophalen AD (Indirecte Connectie)");
 		loadAD.setMinWidth(200);
 
 		loadProfit = new Button("Ophalen Profit");
 		loadProfit.setMinWidth(200);
-		loadProfit.setOnAction(e -> 
-			setTableProfit()
-		);
+		loadProfit.setOnAction(e -> setTableProfit());
 
 		loadClever = new Button("Ophalen CleverNew");
 		loadClever.setMinWidth(200);
@@ -116,6 +165,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 
 		runAll = new Button("Alles Runnen");
 		runAll.setMinWidth(200);
+		runAll.setOnAction(e -> action.writeRules(rapportText));
 
 		top.getChildren().addAll(loadAD, loadProfit, loadClever, createReport, reset, loadedAD, loadedProfit,
 				loadedClever, email, runAll);
@@ -124,15 +174,23 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		top.setVgap(5);
 		top.setHgap(5);
 
+		button = new Button();
+		button.setText("Load Data");
+
+		outer = new BorderPane();
+
+		button.setOnAction(e -> action.LoadProfit());
+
+		layout = new BorderPane();
+		layout.getChildren().add(button);
+		checker = new Scene(outer);
+
 		layout.setTop(top);
 
-		
-		
-		//Mid voor alle Tabellen
+		// Mid voor alle Tabellen
 		VBox mid = new VBox();
-		
-		
-		//Profit Table
+
+		// Profit Table
 		profitLabel = new Label("Profit");
 
 		nameColumn = new TableColumn<>("Name");
@@ -150,49 +208,26 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		profitTable = new TableView<>();
 
 		profitTable.getColumns().addAll(nameColumn, StartContract, EndContract);
-		
-		
-		//AD Table
+
+		// AD Table
 		ADLabel = new Label("AD");
 
 		nameColumn = new TableColumn<>("Name");
 		nameColumn.setMinWidth(200);
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-//		infoColumn = new TableColumn<>("Info");
-//		infoColumn.setMinWidth(200);
-//		infoColumn.setCellValueFactory(new PropertyValueFactory<>("info"));
-//
-//		codeColumn = new TableColumn<>("Code");
-//		codeColumn.setMinWidth(200);
-//		codeColumn.setCellValueFactory(new PropertyValueFactory<>("code"));
-//
 		adTable = new TableView<>();
-//
-//		adTable.getColumns().addAll(nameColumn, infoColumn, codeColumn);
-		
-		
-		//Clever Table
+
+		// Clever Table
 		CleverLabel = new Label("Clever");
 
 		nameColumn = new TableColumn<>("Name");
 		nameColumn.setMinWidth(200);
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-//		infoColumn = new TableColumn<>("Info");
-//		infoColumn.setMinWidth(200);
-//		infoColumn.setCellValueFactory(new PropertyValueFactory<>("info"));
-//
-//		codeColumn = new TableColumn<>("Code");
-//		codeColumn.setMinWidth(200);
-//		codeColumn.setCellValueFactory(new PropertyValueFactory<>("code"));
-//
 		cleverTable = new TableView<>();
-//
-//		cleverTable.getColumns().addAll(nameColumn, infoColumn, codeColumn);
-		
-		
-		//Full mid field
+
+		// Full mid field
 		mid.getChildren().addAll(ADLabel, adTable, profitLabel, profitTable, CleverLabel, cleverTable);
 
 		mid.setPadding(new Insets(10, 10, 10, 10));
@@ -203,7 +238,6 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		Rules.setMinWidth(500);
 
 		Label bRules = new Label("Business Rules");
-
 
 		bRule1 = new Label("   PROFIT <> PROFIT Medewerkernr en Dienstverbanden matchen niet: ");
 		bRule2 = new Label("   PROFIT <> PROFIT Citrix naam niet ingevuld bij Extra Info Veld: ");
@@ -216,26 +250,23 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		bRule9 = new Label("   AD <> CleverNew AD Account, onbekend in CleverNew");
 
 		rapport = new Label("Rapport");
-		
-		rapport.setPadding(new Insets(10,0,0,0));
-		
-		TextArea rapportText = new TextArea();
-		
+
+		rapport.setPadding(new Insets(10, 0, 0, 0));
+
+		rapportText = new TextArea();
+
 		rapportText.setMaxWidth(480);
 		rapportText.setMinHeight(350);
-		
-		
-		Rules.getChildren().addAll(bRules, bRule1, bRule2, bRule3, bRule4, bRule5, bRule6, bRule7, bRule8, bRule9, rapport, rapportText);
-		
-		Rules.setPadding(new Insets(0,10,0,10));
-		
+
+		rapportText.setEditable(false);
+
+		Rules.getChildren().addAll(bRules, bRule1, bRule2, bRule3, bRule4, bRule5, bRule6, bRule7, bRule8, bRule9,
+				rapport, rapportText);
+
+		Rules.setPadding(new Insets(0, 10, 0, 10));
+
 		outer.setCenter(layout);
 		outer.setRight(Rules);
-
-		primaryStage.setResizable(false);
-
-		window.setWidth(1550);
-		window.setHeight(600);
 
 	}
 
@@ -251,8 +282,6 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		loadedProfit.setText(String.valueOf(profit.size()));
 
 	}
-
-
 
 	public static void closeProgram() {
 		try {
