@@ -19,7 +19,7 @@ public class QueriesSelection {
       }
     
     public void getIDPersoon(Connection mConn) throws SQLException{
-            
+            conn = mConn;
             java.sql.Statement stat = conn.createStatement();
             String query = "SELECT ID FROM Persoon;";
             ResultSet res = stat.executeQuery(query);
