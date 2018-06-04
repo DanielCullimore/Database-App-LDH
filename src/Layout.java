@@ -1,7 +1,6 @@
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-
 import DataEntries.*;
 
 import javafx.application.Application;
@@ -16,16 +15,19 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.scene.paint.Color;
 
 public class Layout extends Application implements EventHandler<ActionEvent> {
 
@@ -35,15 +37,23 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 	ImageView legerIcon;
 	Label loginText;
 	TextField loginName;
-	Button loginButton;
+	Button closeButton;
+	GridPane loginScreen;
 
 	// Checker
 	Scene checker;
-	BorderPane outer;
 	BorderPane layout;
+	HBox top;
+	GridPane right;
+	GridPane center;
 
 	Button button;
 	static Stage window;
+
+	// TOP Bar
+	Label welkom;
+	Label team;
+	Button logOut;
 
 	Button loadAD;
 	Button loadProfit;
@@ -66,178 +76,88 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 	TableColumn<ProfitEntry, Date> StartContract;
 	TableColumn<ProfitEntry, Date> EndContract;
 
-	GridPane loginScreen;
-
+	// Right Rules bar
+	Label bRules;
 	Label bRule1;
 	Label bRule2;
-	static Label bRule3;
-	static Label bRule4;
+	Label bRule3;
+	Label bRule4;
 	Label bRule5;
 	Label bRule6;
 	Label bRule7;
 	Label bRule8;
 	Label bRule9;
+	Label bRule10;
+	static TextField bRuleText1;
+	static TextField bRuleText2;
+	static TextField bRuleText3;
+	static TextField bRuleText4;
+	static TextField bRuleText5;
+	static TextField bRuleText6;
+	static TextField bRuleText7;
+	static TextField bRuleText8;
+	static TextField bRuleText9;
+	static TextField bRuleText10;
+
 	Label rapport;
 	TextArea rapportText;
 
-	static Rectangle r;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void start(Stage primaryStage) {
 		window = primaryStage;
 		window.setTitle("Leger Des Heils: Database Checker");
 
-		// Login Setup
-		loginScreen = new GridPane();
-		loginScreen.setVgap(10);
-		loginScreen.setHgap(10);
+		// Checker
+		layout = new BorderPane();
+		checker = new Scene(layout);
 
+		top = new HBox();
+		center = new GridPane();
+		right = new GridPane();
+
+		// TOP
 		logo = new Image("/legerIcon.png");
 		legerIcon = new ImageView(logo);
+		legerIcon.setFitWidth(90);
+		legerIcon.setFitHeight(90);
 
-		GridPane.setConstraints(legerIcon, 0, 0, 4, 1);
+		String name = "Michiel";
+		welkom = new Label("Welkom " + name);
+		welkom.setFont(new Font(25));
+		welkom.setTextFill(Color.WHITE);
 
-		loginText = new Label("Gebruikersnaam:");
-		loginText.setMinWidth((logo.getWidth() / 2) - 5);
+		String eenheid = "Programmer";
+		team = new Label("Eenheid: " + eenheid);
+		team.setFont(new Font(25));
+		team.setTextFill(Color.WHITE);
 
-		loginText.setFont(new Font(25));
-		GridPane.setConstraints(loginText, 0, 1);
+		closeButton = new Button("Afsluiten");
+		closeButton.setOnAction(e -> closeProgram());
+		closeButton.setMinWidth(100);
+		closeButton.setMinHeight(50);
+		closeButton.setFont(new Font(25));
 
-		loginName = new TextField();
-		loginName.setMinWidth((logo.getWidth() / 2) - 5);
-		GridPane.setConstraints(loginName, 1, 1);
+		Region region1 = new Region();
+		HBox.setHgrow(region1, Priority.ALWAYS);
 
-		loginButton = new Button("Login");
-		loginButton.setMinWidth(logo.getWidth() + 10);
-		loginButton.setOnAction(e -> window.setScene(checker));
-		GridPane.setConstraints(loginButton, 0, 2, 2, 1);
+		Region region2 = new Region();
+		HBox.setHgrow(region2, Priority.ALWAYS);
 
-		loginScreen.getChildren().addAll(legerIcon, loginText, loginName, loginButton);
-
-		loginScreen.setAlignment(Pos.CENTER);
-		login = new Scene(loginScreen);
-
-		// Set log in
-		window.setScene(login);
-		window.show();
-
-		window.setOnCloseRequest(e -> closeProgram());
-
-		primaryStage.setResizable(false);
-
-		window.setMaximized(true);
-		window.setFullScreen(true);
-
-		// More info dingen en adere shit
-		// Flowpane op top met alle knoppen
-		FlowPane top = new FlowPane();
-		loadAD = new Button("Ophalen AD (Indirecte Connectie)");
-		loadAD.setMinWidth(200);
-
-		loadProfit = new Button("Ophalen Profit");
-		loadProfit.setMinWidth(200);
-		loadProfit.setOnAction(e -> setTableProfit());
-
-		loadClever = new Button("Ophalen CleverNew");
-		loadClever.setMinWidth(200);
-
-		createReport = new Button("Creeër Rapport");
-		createReport.setMinWidth(200);
-
-		reset = new Button("Rest");
-		reset.setMinWidth(200);
-
-		loadedAD = new TextField();
-		loadedAD.setMinWidth(200);
-		loadedAD.setEditable(false);
-
-		loadedProfit = new TextField();
-		loadedProfit.setMinWidth(200);
-		loadedProfit.setEditable(false);
-
-		loadedClever = new TextField();
-		loadedClever.setMinWidth(200);
-		loadedClever.setEditable(false);
-
-		email = new Button("E-mail");
-		email.setMinWidth(200);
-
-		runAll = new Button("Alles Runnen");
-		runAll.setMinWidth(200);
-		runAll.setOnAction(e -> action.writeRules(rapportText));
-
-		top.getChildren().addAll(loadAD, loadProfit, loadClever, createReport, reset, loadedAD, loadedProfit,
-				loadedClever, email, runAll);
-
+		top.setMinHeight(100);
 		top.setPadding(new Insets(10, 10, 10, 10));
-		top.setVgap(5);
-		top.setHgap(5);
+		top.setAlignment(Pos.CENTER);
+		top.getChildren().addAll(legerIcon, welkom, region1, team, region2, closeButton);
+		top.setBackground(Background.EMPTY);
+		String style = "-fx-background-color: #EF402F;";
+		top.setSpacing(10);
+		top.setStyle(style);
 
-		button = new Button();
-		button.setText("Load Data");
+		// RIGHT
+		// right.setMinWidth(600);
 
-		outer = new BorderPane();
-
-		button.setOnAction(e -> action.LoadProfit());
-
-		layout = new BorderPane();
-		layout.getChildren().add(button);
-		checker = new Scene(outer);
-
-		layout.setTop(top);
-
-		// Mid voor alle Tabellen
-		VBox mid = new VBox();
-
-		// Profit Table
-		profitLabel = new Label("Profit");
-
-		nameColumn = new TableColumn<>("Name");
-		nameColumn.setMinWidth(200);
-		nameColumn.setCellValueFactory(new PropertyValueFactory<>("EmployeeUsername"));
-
-		StartContract = new TableColumn<>("Start Contract");
-		StartContract.setMinWidth(200);
-		StartContract.setCellValueFactory(new PropertyValueFactory<>("StartContractDate"));
-
-		EndContract = new TableColumn<>("End Contract");
-		EndContract.setMinWidth(200);
-		EndContract.setCellValueFactory(new PropertyValueFactory<>("EndContractDate"));
-
-		profitTable = new TableView<>();
-
-		profitTable.getColumns().addAll(nameColumn, StartContract, EndContract);
-
-		// AD Table
-		ADLabel = new Label("AD");
-
-		nameColumn = new TableColumn<>("Name");
-		nameColumn.setMinWidth(200);
-		nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-		adTable = new TableView<>();
-
-		// Clever Table
-		CleverLabel = new Label("Clever");
-
-		nameColumn = new TableColumn<>("Name");
-		nameColumn.setMinWidth(200);
-		nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-		cleverTable = new TableView<>();
-
-		// Full mid field
-		mid.getChildren().addAll(ADLabel, adTable, profitLabel, profitTable, CleverLabel, cleverTable);
-
-		mid.setPadding(new Insets(10, 10, 10, 10));
-
-		layout.setCenter(mid);
-
-		VBox Rules = new VBox();
-		Rules.setMinWidth(500);
-
-		Label bRules = new Label("Business Rules");
+		bRules = new Label("Business Rules");
+		rapport = new Label("Rapport");
 
 		bRule1 = new Label("   PROFIT <> PROFIT Medewerkernr en Dienstverbanden matchen niet: ");
 		bRule2 = new Label("   PROFIT <> PROFIT Citrix naam niet ingevuld bij Extra Info Veld: ");
@@ -248,26 +168,112 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		bRule7 = new Label("   CleverNew <> AD Medewerker uit dienst in CleverNew, account in AD");
 		bRule8 = new Label("   AD <> PROFIT AD Account, onbekend in Profit");
 		bRule9 = new Label("   AD <> CleverNew AD Account, onbekend in CleverNew");
+		bRule10 = new Label("   test");
 
-		rapport = new Label("Rapport");
+		bRuleText1 = new TextField();
+		bRuleText2 = new TextField();
+		bRuleText3 = new TextField();
+		bRuleText4 = new TextField();
+		bRuleText5 = new TextField();
+		bRuleText6 = new TextField();
+		bRuleText7 = new TextField();
+		bRuleText8 = new TextField();
+		bRuleText9 = new TextField();
+		bRuleText10 = new TextField();
 
-		rapport.setPadding(new Insets(10, 0, 0, 0));
+		bRuleText1.setEditable(false);
+		bRuleText2.setEditable(false);
+		bRuleText3.setEditable(false);
+		bRuleText4.setEditable(false);
+		bRuleText5.setEditable(false);
+		bRuleText6.setEditable(false);
+		bRuleText7.setEditable(false);
+		bRuleText8.setEditable(false);
+		bRuleText9.setEditable(false);
+		bRuleText10.setEditable(false);
+
+		bRules.setFont(new Font(15));
+		bRule1.setFont(new Font(15));
+		bRule2.setFont(new Font(15));
+		bRule3.setFont(new Font(15));
+		bRule4.setFont(new Font(15));
+		bRule5.setFont(new Font(15));
+		bRule6.setFont(new Font(15));
+		bRule7.setFont(new Font(15));
+		bRule8.setFont(new Font(15));
+		bRule9.setFont(new Font(15));
+		rapport.setFont(new Font(15));
 
 		rapportText = new TextArea();
 
-		rapportText.setMaxWidth(480);
-		rapportText.setMinHeight(350);
+		GridPane.setConstraints(bRules, 0, 0, 2, 1);
+		GridPane.setConstraints(bRule1, 1, 1);
+		GridPane.setConstraints(bRuleText1, 2, 1);
+		GridPane.setConstraints(bRule2, 1, 2);
+		GridPane.setConstraints(bRuleText2, 2, 2);
+		GridPane.setConstraints(bRule3, 1, 3);
+		GridPane.setConstraints(bRuleText3, 2, 3);
+		GridPane.setConstraints(bRule4, 1, 4);
+		GridPane.setConstraints(bRuleText4, 2, 4);
+		GridPane.setConstraints(bRule5, 1, 5);
+		GridPane.setConstraints(bRuleText5, 2, 5);
+		GridPane.setConstraints(bRule6, 1, 6);
+		GridPane.setConstraints(bRuleText6, 2, 6);
+		GridPane.setConstraints(bRule7, 1, 7);
+		GridPane.setConstraints(bRuleText7, 2, 7);
+		GridPane.setConstraints(bRule8, 1, 8);
+		GridPane.setConstraints(bRuleText8, 2, 8);
+		GridPane.setConstraints(bRule9, 1, 9);
+		GridPane.setConstraints(bRuleText9, 2, 9);
+		GridPane.setConstraints(bRule10, 1, 10);
+		GridPane.setConstraints(bRuleText10, 2, 10);
+		GridPane.setConstraints(rapport, 0, 11, 2, 1);
+		GridPane.setConstraints(rapportText, 0, 12, 3, 1);
+
+		rapport.setPadding(new Insets(10, 0, 0, 0));
+
+		rapportText.setMinHeight(600);
 
 		rapportText.setEditable(false);
 
-		Rules.getChildren().addAll(bRules, bRule1, bRule2, bRule3, bRule4, bRule5, bRule6, bRule7, bRule8, bRule9,
-				rapport, rapportText);
+//		right.setGridLinesVisible(true);
+		right.setHgap(20);
+		right.setVgap(5);
 
-		Rules.setPadding(new Insets(0, 10, 0, 10));
 
-		outer.setCenter(layout);
-		outer.setRight(Rules);
+		right.getChildren().addAll(bRules, bRule1, bRuleText1, bRule2, bRuleText2, bRule3, bRuleText3, bRule4,
+				bRuleText4, bRule5, bRuleText5, bRule6, bRuleText6, bRule7, bRuleText7, bRule8, bRuleText8, bRule9,
+				bRuleText9, bRule10, bRuleText10, rapport, rapportText);
 
+		right.setPadding(new Insets(0, 10, 0, 10));
+
+		// Center
+		Button load = new Button();
+		load.setMinWidth(300);
+		load.setMinHeight(300);
+
+		center.getChildren().addAll(load);
+
+		load.setOnAction(e -> action.writeRules(rapportText));
+
+		layout.setRight(right);
+		layout.setTop(top);
+		layout.setCenter(center);
+
+		window.setScene(checker);
+		window.show();
+
+		window.setFullScreen(true);
+
+		window.setOnCloseRequest(e -> closeProgram());
+
+		primaryStage.setResizable(false);
+
+	}
+
+	public void loggedIn() {
+		window.setScene(checker);
+		window.setFullScreen(true);
 	}
 
 	private void setTableProfit() {
