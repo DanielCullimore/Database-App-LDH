@@ -1,9 +1,24 @@
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import DataEntries.ProfitEntry;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
+import javafx.stage.Popup;
+import javafx.stage.Window;
 
 public class action {
 
@@ -54,27 +69,92 @@ public class action {
 		return profitList;
 	}
 
-	public static void writeRules(TextArea a) {
+	public static void writeRules(TextArea a, Window window) {
 
 		conn = main.conn;
-		
-		
 
-		writeRule1(conn, a);
-		writeRule2(conn, a);
-		writeRule3(conn, a);
-		writeRule4(conn, a);
-		writeRule5(conn, a);
-		writeRule6(conn, a);
-		writeRule7(conn, a);
-		writeRule8(conn, a);
-		writeRule9(conn, a);
-		writeRule10(conn, a);
+		Layout.load.setDisable(true);
+		Layout.ProgBar.setProgress(0);
+		
+		Task<?> ruler1 = createRuler1(conn, a);
+		Thread rule1Thread = new Thread(ruler1);
+		
+		ruler1.addEventFilter(WorkerStateEvent.WORKER_STATE_RUNNING,  new EventHandler<WorkerStateEvent>() {
+			 
+            @Override
+            public void handle(WorkerStateEvent t) {
+        		Layout.ProgBar.setProgress(-1);
+            }
+        });
+		
+		
+		ruler1.addEventFilter(WorkerStateEvent.WORKER_STATE_SUCCEEDED,  new EventHandler<WorkerStateEvent>() {
+			 
+            @Override
+            public void handle(WorkerStateEvent t) {
+        		Layout.ProgBar.setProgress(1);
+        		Layout.load.setDisable(false);
+            }
+        });
+		
+		rule1Thread.start();
+		
+		
+		
+		
+//		Layout.ProgBar.setProgress(-1);
+//
+//		ArrayList<Thread> t = new ArrayList<>();
+//
+//
+//		
+//		Task<?> progressTask = createProgressT();
+//		Thread progressTaskThread = new Thread(progressTask);
+//		t.add(progressTaskThread);
+//		progressTaskThread.start();
+//
+//		Task<?> ruler1 = createRuler1(conn, a);
+//		Thread rule1Thread = new Thread(ruler1);
+//		t.add(rule1Thread);
+//		rule1Thread.start();
+//
+//		Task<?> ruler2 = createRuler2(conn, a);
+//		Thread rule2Thread = new Thread(ruler2);
+//		t.add(rule2Thread);
+//		rule2Thread.start();
+//
+//		Task<?> ruler3 = createRuler3(conn, a);
+//		Thread rule3Thread = new Thread(ruler3);
+//		t.add(rule3Thread);
+//		rule3Thread.start();
+//
+//		for (int i = 0; i < t.size(); i++) {
+//			try {
+//				t.get(i).join();
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//
+//		Layout.ProgBar.setProgress(1);
+
 
 	}
 
-	public static void writeRule1(Connection con, TextArea a) {
+	private static Task<?> createProgressT() {
+		return new Task<Object>() {
+			@Override
+			protected Object call() throws Exception {
 
+				AlertBox.display("sdfsdf", "sdfsdf");
+
+				return true;
+			}
+		};
+	}
+
+	public static void writeRule1(Connection con, TextArea a) {
 
 	}
 
@@ -204,6 +284,70 @@ public class action {
 
 	public static void writeRule10(Connection con, TextArea a) {
 
+	}
+
+	public static Task<?> createWorker() {
+		return new Task<Object>() {
+			@Override
+			protected Object call() throws Exception {
+				for (int i = 0; i < 10; i++) {
+					Thread.sleep(2000);
+					updateMessage("2000 milliseconds");
+					updateProgress(i + 1, 10);
+				}
+				return true;
+			}
+		};
+	}
+
+	public static Task<?> createRuler1(Connection conn, TextArea a) {
+		return new Task<Object>() {
+			@Override
+			protected Object call() throws Exception {
+
+				writeRule1(conn, a);
+				writeRule2(conn, a);
+				writeRule3(conn, a);
+//				writeRule4(conn, a);
+				writeRule5(conn, a);
+//				writeRule6(conn, a);
+//				writeRule7(conn, a);
+//				writeRule8(conn, a);
+//				writeRule9(conn, a);
+//				writeRule10(conn, a);
+
+				return true;
+			}
+		};
+	}
+
+	public static Task<?> createRuler2(Connection conn, TextArea a) {
+		return new Task<Object>() {
+			@Override
+			protected Object call() throws Exception {
+
+				writeRule4(conn, a);
+				writeRule5(conn, a);
+				writeRule6(conn, a);
+
+				return true;
+			}
+		};
+	}
+
+	public static Task<?> createRuler3(Connection conn, TextArea a) {
+		return new Task<Object>() {
+			@Override
+			protected Object call() throws Exception {
+
+				writeRule7(conn, a);
+				writeRule8(conn, a);
+				writeRule9(conn, a);
+				writeRule10(conn, a);
+
+				return true;
+			}
+		};
 	}
 
 }

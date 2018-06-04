@@ -11,6 +11,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -101,6 +103,10 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 
 	Label rapport;
 	TextArea rapportText;
+	
+	//center
+	static Button load;
+	static ProgressBar ProgBar;
 
 
 	@Override
@@ -248,14 +254,29 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		right.setPadding(new Insets(0, 10, 0, 10));
 
 		// Center
-		Button load = new Button();
+		load = new Button("Inladen");
 		load.setMinWidth(300);
 		load.setMinHeight(300);
+		
+		ProgBar = new ProgressBar(0);
+		ProgBar.setMinWidth(300);
+		ProgBar.setMinHeight(50);
+		
+		GridPane.setConstraints(ProgBar, 0, 1);
+		center.setPadding(new Insets(25, 25, 25, 25));
+		center.setHgap(10);
+		center.setVgap(10);
+		
 
-		center.getChildren().addAll(load);
+		center.getChildren().addAll(load, ProgBar);
 
-		load.setOnAction(e -> action.writeRules(rapportText));
+		load.setOnAction(e -> action.writeRules(rapportText, window));
 
+
+		
+		
+		
+		
 		layout.setRight(right);
 		layout.setTop(top);
 		layout.setCenter(center);
