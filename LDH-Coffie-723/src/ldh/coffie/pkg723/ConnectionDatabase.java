@@ -28,29 +28,26 @@ public class ConnectionDatabase {
     public static Connection getConnection() {
     try{
       
+      
       conn = DriverManager.getConnection(url,username,password);
       System.out.println("Verbinding gemaakt");
        
-       try{
-          java.sql.Statement stat = conn.createStatement();
-          String query = "SELECT ID FROM Persoon;";
-          ResultSet res = stat.executeQuery(query);
-          
-          while(res.next()){
-            System.out.println(res.getRow() + ": ");
-            System.out.println(res.getString("ID") + ": ");
-          }
-      }
-      
-       finally{
-            conn.close();
-            System.out.println( "Verbinding afgesloten");
-               }   
-      }
-      
+       }
       catch(SQLException e){
            System.out.println("Foutmelding:" + e.getMessage());
       }
     return conn;
     }
+    
+    public void closeConnection(Connection mConn) throws SQLException {  
+        
+        try{ 
+            conn = mConn;
+            }
+
+       finally{
+            conn.close();
+            System.out.println( "Verbinding afgesloten");
+               }
+  }
 }

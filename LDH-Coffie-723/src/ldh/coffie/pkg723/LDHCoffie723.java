@@ -23,10 +23,12 @@ public class LDHCoffie723 {
     
     static ConnectionDatabase connDb;
     static Connection conn;
-    public static void main(String[] args) {
+    static QueriesSelection qStatments;
+    public static void main(String[] args) throws SQLException {
     connDb = new ConnectionDatabase();        
-   
+    qStatments = new QueriesSelection();
     conn = connDb.getConnection();
-   
+    qStatments.getIDPersoon(conn);
+    connDb.closeConnection(conn);
 }
 }
