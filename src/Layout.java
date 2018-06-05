@@ -1,8 +1,5 @@
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
-
-import com.sun.media.sound.PortMixerProvider;
 
 import DataEntries.*;
 
@@ -12,14 +9,12 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -32,10 +27,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
@@ -110,7 +102,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 	static TextField bRuleText8;
 	static TextField bRuleText9;
 	static TextField bRuleText10;
-
+	
 	Label rapport;
 	TextArea rapportText;
 	
@@ -317,7 +309,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 
 		center.getChildren().addAll(load, ProgBar, changeString);
 
-		load.setOnAction(e -> action.writeRules(rapportText, window));
+		load.setOnAction(e -> action.writeRules(rapportText, window, primaryStage));
 
 
 		
@@ -346,18 +338,6 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		window.setFullScreen(true);
 	}
 
-	private void setTableProfit() {
-
-		ArrayList<ProfitEntry> profit = action.fillProfitTable();
-
-		for (ProfitEntry p : profit) {
-			profitTable.getItems().add(p);
-			System.out.println("Dit zit er in P = " + p.getEmployeeUsername());
-		}
-
-		loadedProfit.setText(String.valueOf(profit.size()));
-
-	}
 
 	public static void closeProgram() {
 		try {

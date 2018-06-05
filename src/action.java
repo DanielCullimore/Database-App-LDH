@@ -1,157 +1,82 @@
-import java.io.File;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import DataEntries.ProfitEntry;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
-import javafx.scene.paint.Color;
-import javafx.stage.Popup;
+import javafx.scene.layout.StackPane;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
+import javafx.util.Pair;
 
 public class action {
 
 	static Connection conn;
 
-	public static void LoadProfit() {
+	public static void writeRules(TextArea a, Window window, Stage primaryStage) {
 
 		conn = main.conn;
 
-		try {
-			Statement stat = conn.createStatement();
-			String query = "SELECT medewerker, ;";
-
-			ResultSet res = stat.executeQuery(query);
-
-			while (res.next()) {
-				System.out.println(res.getRow() + ": ");
-				System.out.println(res.getString("ID") + ": ");
-			}
-
-		} catch (SQLException e) {
-			System.out.println("Foutmelding:" + e.getMessage());
-
-		}
-	}
-
-	public static ArrayList<ProfitEntry> fillProfitTable() {
-		conn = main.conn;
-		ArrayList<ProfitEntry> profitList = new ArrayList<>();
-
-		try {
-			Statement stat = conn.createStatement();
-			String query = "SELECT EmployeeUsername, ContractStartDate, ContractEndDate\r\n"
-					+ "FROM [AfasProfit-Export]";
-
-			ResultSet res = stat.executeQuery(query);
-
-			while (res.next()) {
-				profitList.add(new ProfitEntry(res.getString("EmployeeUsername"), res.getDate("ContractStartDate"),
-						res.getDate("ContractEndDate")));
-			}
-
-		} catch (SQLException e) {
-			System.out.println("Foutmelding:" + e.getMessage());
-
-		}
-
-		return profitList;
-	}
-
-	public static void writeRules(TextArea a, Window window) {
-
-		conn = main.conn;
+		a.setText("");
 
 		Layout.load.setDisable(true);
 		Layout.ProgBar.setProgress(0);
-		
+
 		Task<?> ruler1 = createRuler1(conn, a);
 		Thread rule1Thread = new Thread(ruler1);
 		
-		ruler1.addEventFilter(WorkerStateEvent.WORKER_STATE_RUNNING,  new EventHandler<WorkerStateEvent>() {
-			 
-            @Override
-            public void handle(WorkerStateEvent t) {
-        		Layout.ProgBar.setProgress(-1);
-            }
-        });
+//		Dialog<?> dialog = new Dialog<>();
+		Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+		dialog.setHeaderText(null);
+		dialog.setGraphic(null);
+		dialog.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+		dialog.initOwner(primaryStage);
+		
+		dialog.setTitle("Laden");
+		
+		ProgressIndicator p = new ProgressIndicator(-1);
+		
+		dialog.initStyle(StageStyle.UTILITY);
+		
+		StackPane sp = new StackPane();
+		sp.getChildren().add(p);
+		dialog.getDialogPane().setContent(sp);
 		
 		
-		ruler1.addEventFilter(WorkerStateEvent.WORKER_STATE_SUCCEEDED,  new EventHandler<WorkerStateEvent>() {
-			 
-            @Override
-            public void handle(WorkerStateEvent t) {
-        		Layout.ProgBar.setProgress(1);
-        		Layout.load.setDisable(false);
-            }
-        });
-		
-		rule1Thread.start();
-		
-		
-		
-		
-//		Layout.ProgBar.setProgress(-1);
-//
-//		ArrayList<Thread> t = new ArrayList<>();
-//
-//
-//		
-//		Task<?> progressTask = createProgressT();
-//		Thread progressTaskThread = new Thread(progressTask);
-//		t.add(progressTaskThread);
-//		progressTaskThread.start();
-//
-//		Task<?> ruler1 = createRuler1(conn, a);
-//		Thread rule1Thread = new Thread(ruler1);
-//		t.add(rule1Thread);
-//		rule1Thread.start();
-//
-//		Task<?> ruler2 = createRuler2(conn, a);
-//		Thread rule2Thread = new Thread(ruler2);
-//		t.add(rule2Thread);
-//		rule2Thread.start();
-//
-//		Task<?> ruler3 = createRuler3(conn, a);
-//		Thread rule3Thread = new Thread(ruler3);
-//		t.add(rule3Thread);
-//		rule3Thread.start();
-//
-//		for (int i = 0; i < t.size(); i++) {
-//			try {
-//				t.get(i).join();
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//
-//		Layout.ProgBar.setProgress(1);
 
+		ruler1.addEventFilter(WorkerStateEvent.WORKER_STATE_RUNNING, new EventHandler<WorkerStateEvent>() {
 
-	}
-
-	private static Task<?> createProgressT() {
-		return new Task<Object>() {
 			@Override
-			protected Object call() throws Exception {
+			public void handle(WorkerStateEvent t) {
 
-				AlertBox.display("sdfsdf", "sdfsdf");
 
-				return true;
+
+				 dialog.showAndWait();
 			}
-		};
+		});
+
+		ruler1.addEventFilter(WorkerStateEvent.WORKER_STATE_SUCCEEDED, new EventHandler<WorkerStateEvent>() {
+
+			@Override
+			public void handle(WorkerStateEvent t) {
+				dialog.close();
+				Layout.load.setDisable(false);
+			}
+		});
+
+		rule1Thread.start();
+		// try {
+		// rule1Thread.join();
+		// } catch (InterruptedException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+
 	}
 
 	public static void writeRule1(Connection con, TextArea a) {
@@ -286,37 +211,32 @@ public class action {
 
 	}
 
-	public static Task<?> createWorker() {
-		return new Task<Object>() {
-			@Override
-			protected Object call() throws Exception {
-				for (int i = 0; i < 10; i++) {
-					Thread.sleep(2000);
-					updateMessage("2000 milliseconds");
-					updateProgress(i + 1, 10);
-				}
-				return true;
-			}
-		};
-	}
-
 	public static Task<?> createRuler1(Connection conn, TextArea a) {
 		return new Task<Object>() {
 			@Override
 			protected Object call() throws Exception {
 
-				writeRule1(conn, a);
-				writeRule2(conn, a);
+			try {
+				
+				
+//				writeRule1(conn, a);
+//				writeRule2(conn, a);
 				writeRule3(conn, a);
-//				writeRule4(conn, a);
-				writeRule5(conn, a);
-//				writeRule6(conn, a);
-//				writeRule7(conn, a);
-//				writeRule8(conn, a);
-//				writeRule9(conn, a);
-//				writeRule10(conn, a);
+				 writeRule4(conn, a);
+				 writeRule5(conn, a);
+				// writeRule6(conn, a);
+				// writeRule7(conn, a);
+				// writeRule8(conn, a);
+				// writeRule9(conn, a);
+				// writeRule10(conn, a);
 
 				return true;
+			}
+			catch(NullPointerException e) {
+				System.out.println("Fout");
+			}
+			return null;
+				
 			}
 		};
 	}
