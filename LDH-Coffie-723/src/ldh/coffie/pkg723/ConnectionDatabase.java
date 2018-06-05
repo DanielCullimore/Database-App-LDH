@@ -9,10 +9,8 @@ package ldh.coffie.pkg723;
  * @author Daniel Mensche
  **/
 // Import connection classes
-import java.beans.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
@@ -27,8 +25,7 @@ public class ConnectionDatabase {
    
     public static Connection getConnection() {
     try{
-      
-      
+ 
       conn = DriverManager.getConnection(url,username,password);
       System.out.println("Verbinding gemaakt");
        

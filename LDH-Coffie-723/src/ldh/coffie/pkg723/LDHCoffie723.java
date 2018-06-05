@@ -5,15 +5,11 @@
  */
 package ldh.coffie.pkg723;
 
-import java.beans.Statement;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *
- * @author Danny
+ * @author Daniel Mensche
  */
 public class LDHCoffie723 {
 
@@ -24,13 +20,27 @@ public class LDHCoffie723 {
     static ConnectionDatabase connDb;
     static Connection conn;
     static QueriesSelection qStatments;
+    static MultiAccessRestriction access;
+    static String statusProgram;
+    
     public static void main(String[] args) throws SQLException {
+    
     connDb = new ConnectionDatabase();        
     qStatments = new QueriesSelection();
+    access = new MultiAccessRestriction();
+    statusProgram = access.restrictionControl();
+    
+    if(statusProgram.equals("Running")){
     conn = connDb.getConnection();
     qStatments.getIDPersoon(conn);
     connDb.closeConnection(conn);
-    
+    }
+    else if (statusProgram.equals("Deny Instance")){
+        System.out.println("Only 1 instance can run");
+    }
+    else if (statusProgram.equals("Access Deny")){
+        System.out.println("Could not start program, try again later");
+    }
     
     
 }
