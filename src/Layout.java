@@ -1,6 +1,9 @@
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+
+import com.sun.media.sound.PortMixerProvider;
+
 import DataEntries.*;
 
 import javafx.application.Application;
@@ -9,7 +12,11 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
@@ -28,7 +35,10 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Pair;
 import javafx.scene.paint.Color;
 
 public class Layout extends Application implements EventHandler<ActionEvent> {
@@ -260,19 +270,57 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		
 		ProgBar = new ProgressBar(0);
 		ProgBar.setMinWidth(300);
-		ProgBar.setMinHeight(50);
+		ProgBar.setMinHeight(50);	
 		
 		GridPane.setConstraints(ProgBar, 0, 1);
 		center.setPadding(new Insets(25, 25, 25, 25));
 		center.setHgap(10);
 		center.setVgap(10);
 		
+		Button changeString = new Button("String");
+		changeString.setMinWidth(300);
+		changeString.setMinHeight(300);
+		GridPane.setConstraints(changeString, 1, 0);
+		
 
-		center.getChildren().addAll(load, ProgBar);
+
+		
+		
+		Dialog<Pair<String, String>> dialog = new Dialog<>();
+		dialog.setTitle("Aanpassen van de Connection String");
+		ButtonType loginButtonType = new ButtonType("Pas Aan", ButtonData.OK_DONE);
+		dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+		
+		dialog.initStyle(StageStyle.UTILITY);
+
+		changeString.setOnAction(e -> dialog.show());
+		
+		GridPane grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(20, 150, 10, 10));
+
+		
+		TextField portNumber = new TextField();
+//		portNumber.setText("");							Haal dit gewoon rechtstreeks uit het bestandje
+		TextField URL = new TextField();
+//		password.setPromptText("URL");
+
+		grid.add(new Label("Port Nummer:"), 0, 0);
+		grid.add(portNumber, 1, 0);
+		grid.add(new Label("URL:"), 0, 1);
+		grid.add(URL, 1, 1);
+
+		
+		dialog.getDialogPane().setContent(grid);
+
+
+		center.getChildren().addAll(load, ProgBar, changeString);
 
 		load.setOnAction(e -> action.writeRules(rapportText, window));
 
 
+		
 		
 		
 		
@@ -283,6 +331,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 
 		window.setScene(checker);
 		window.show();
+		dialog.initOwner(primaryStage);
 
 		window.setFullScreen(true);
 
