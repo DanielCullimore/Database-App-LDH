@@ -1,18 +1,24 @@
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.*;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
-import javafx.util.Pair;
 
 public class action {
 
@@ -29,34 +35,30 @@ public class action {
 
 		Task<?> ruler1 = createRuler1(conn, a);
 		Thread rule1Thread = new Thread(ruler1);
-		
-//		Dialog<?> dialog = new Dialog<>();
+
+		// Dialog<?> dialog = new Dialog<>();
 		Alert dialog = new Alert(Alert.AlertType.INFORMATION);
 		dialog.setHeaderText(null);
 		dialog.setGraphic(null);
 		dialog.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
 		dialog.initOwner(primaryStage);
-		
+
 		dialog.setTitle("Laden");
-		
+
 		ProgressIndicator p = new ProgressIndicator(-1);
-		
+
 		dialog.initStyle(StageStyle.UTILITY);
-		
+
 		StackPane sp = new StackPane();
 		sp.getChildren().add(p);
 		dialog.getDialogPane().setContent(sp);
-		
-		
 
 		ruler1.addEventFilter(WorkerStateEvent.WORKER_STATE_RUNNING, new EventHandler<WorkerStateEvent>() {
 
 			@Override
 			public void handle(WorkerStateEvent t) {
 
-
-
-				 dialog.showAndWait();
+				dialog.showAndWait();
 			}
 		});
 
@@ -216,27 +218,25 @@ public class action {
 			@Override
 			protected Object call() throws Exception {
 
-			try {
-				
-				
-//				writeRule1(conn, a);
-//				writeRule2(conn, a);
-				writeRule3(conn, a);
-				 writeRule4(conn, a);
-				 writeRule5(conn, a);
-				// writeRule6(conn, a);
-				// writeRule7(conn, a);
-				// writeRule8(conn, a);
-				// writeRule9(conn, a);
-				// writeRule10(conn, a);
+				try {
 
-				return true;
-			}
-			catch(NullPointerException e) {
-				System.out.println("Fout");
-			}
-			return null;
-				
+					// writeRule1(conn, a);
+					// writeRule2(conn, a);
+					writeRule3(conn, a);
+					writeRule4(conn, a);
+					writeRule5(conn, a);
+					// writeRule6(conn, a);
+					// writeRule7(conn, a);
+					// writeRule8(conn, a);
+					// writeRule9(conn, a);
+					// writeRule10(conn, a);
+
+					return true;
+				} catch (NullPointerException e) {
+					System.out.println("Fout");
+				}
+				return null;
+
 			}
 		};
 	}
@@ -270,4 +270,98 @@ public class action {
 		};
 	}
 
+	public static void changeString(Dialog<String> dialog) throws IOException {
+
+		Optional<String> s = dialog.showAndWait();
+		PrintWriter pw = null;
+
+		try {
+			pw = new PrintWriter("src/connection.txt");
+			BufferedWriter bw = new BufferedWriter(pw);
+
+			try {
+				bw.write(s.get());
+			} catch (NoSuchElementException e) {
+				bw.write("jdbc:sqlserver://localhost:1433;DatabaseName=AuditBlackBox");
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			pw.close();
+		}
+
+	}
+
+	public static void write(Window window, Stage primaryStage) {
+
+		conn = main.conn;
+
+		Task<?> writer = createWriter();
+		Thread rule1Thread = new Thread(writer);
+
+		// Dialog<?> dialog = new Dialog<>();
+		Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+		dialog.setHeaderText(null);
+		dialog.setGraphic(null);
+		dialog.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+		dialog.initOwner(primaryStage);
+
+		dialog.setTitle("Schrijven");
+
+		ProgressIndicator p = new ProgressIndicator(-1);
+
+		dialog.initStyle(StageStyle.UTILITY);
+
+		StackPane sp = new StackPane();
+		sp.getChildren().add(p);
+		dialog.getDialogPane().setContent(sp);
+		
+		StackPane done = new StackPane();
+		Label t = new Label("Het overschrijven was succesvol");
+		done.getChildren().add(t);
+		
+		
+		
+
+		writer.addEventFilter(WorkerStateEvent.WORKER_STATE_RUNNING, new EventHandler<WorkerStateEvent>() {
+
+			@Override
+			public void handle(WorkerStateEvent t) {
+
+				dialog.showAndWait();
+			}
+		});
+
+		writer.addEventFilter(WorkerStateEvent.WORKER_STATE_SUCCEEDED, new EventHandler<WorkerStateEvent>() {
+
+			@Override
+			public void handle(WorkerStateEvent t) {
+				dialog.getDialogPane().setContent(done);
+				dialog.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
+			
+			}
+		});
+
+		rule1Thread.start();
+
+	}
+
+	private static Task<?> createWriter() {
+		return new Task<Object>() {
+			@Override
+			protected Object call() throws Exception {
+
+				try {
+
+					cvsWriter.write();
+					return true;
+				} catch (NullPointerException e) {
+					System.out.println("Fout");
+				}
+				return null;
+
+			}
+		};
+
+	}
 }

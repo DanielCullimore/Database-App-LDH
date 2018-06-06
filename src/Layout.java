@@ -1,5 +1,14 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Optional;
 
 import DataEntries.*;
 
@@ -102,14 +111,15 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 	static TextField bRuleText8;
 	static TextField bRuleText9;
 	static TextField bRuleText10;
-	
+
+	static Optional<String> s;
+
 	Label rapport;
 	TextArea rapportText;
-	
-	//center
+
+	// center
 	static Button load;
 	static ProgressBar ProgBar;
-
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -244,10 +254,9 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 
 		rapportText.setEditable(false);
 
-//		right.setGridLinesVisible(true);
+		// right.setGridLinesVisible(true);
 		right.setHgap(20);
 		right.setVgap(5);
-
 
 		right.getChildren().addAll(bRules, bRule1, bRuleText1, bRule2, bRuleText2, bRule3, bRuleText3, bRule4,
 				bRuleText4, bRule5, bRuleText5, bRule6, bRuleText6, bRule7, bRuleText7, bRule8, bRuleText8, bRule9,
@@ -259,64 +268,76 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		load = new Button("Inladen");
 		load.setMinWidth(300);
 		load.setMinHeight(300);
-		
-		ProgBar = new ProgressBar(0);
-		ProgBar.setMinWidth(300);
-		ProgBar.setMinHeight(50);	
-		
-		GridPane.setConstraints(ProgBar, 0, 1);
+
 		center.setPadding(new Insets(25, 25, 25, 25));
 		center.setHgap(10);
 		center.setVgap(10);
-		
+
 		Button changeString = new Button("String");
 		changeString.setMinWidth(300);
 		changeString.setMinHeight(300);
 		GridPane.setConstraints(changeString, 1, 0);
+
+		Button toCvs = new Button("Write");
+		toCvs.setMinSize(300, 300);
+		GridPane.setConstraints(toCvs, 0, 1);
+		toCvs.setOnAction(e -> action.write(window, primaryStage));
+		
 		
 
-
-		
-		
-		Dialog<Pair<String, String>> dialog = new Dialog<>();
+		Dialog<String> dialog = new Dialog<>();
 		dialog.setTitle("Aanpassen van de Connection String");
-		ButtonType loginButtonType = new ButtonType("Pas Aan", ButtonData.OK_DONE);
-		dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
-		
+		ButtonType urlSet = new ButtonType("Pas Aan", ButtonData.OK_DONE);
+		dialog.getDialogPane().getButtonTypes().addAll(urlSet, ButtonType.CANCEL);
+
 		dialog.initStyle(StageStyle.UTILITY);
 
-		changeString.setOnAction(e -> dialog.show());
-		
+		changeString.setOnAction(e -> {
+			try {
+				action.changeString(dialog);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
+
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 150, 10, 10));
 
-		
-		TextField portNumber = new TextField();
-//		portNumber.setText("");							Haal dit gewoon rechtstreeks uit het bestandje
+		String prompt = "";
+
+		try {
+			InputStream is = new FileInputStream("src/connection.txt");
+			BufferedReader buf = new BufferedReader(new InputStreamReader(is));
+			prompt = buf.readLine();
+		} catch (IOException e) {
+
+		}
+
 		TextField URL = new TextField();
-//		password.setPromptText("URL");
+		URL.setText(prompt);
+		URL.setMinWidth(400);
 
-		grid.add(new Label("Port Nummer:"), 0, 0);
-		grid.add(portNumber, 1, 0);
-		grid.add(new Label("URL:"), 0, 1);
-		grid.add(URL, 1, 1);
+		grid.add(new Label("URL:"), 0, 0);
+		grid.add(URL, 1, 0);
 
-		
 		dialog.getDialogPane().setContent(grid);
 
+		dialog.setResultConverter(dialogButton -> {
+			if (dialogButton == urlSet) {
+				return new String(URL.getText());
+			}
+			return null;
+		});
 
-		center.getChildren().addAll(load, ProgBar, changeString);
+		// Optional<String> result = dialog.showAndWait();
+
+		center.getChildren().addAll(load, changeString, toCvs);
 
 		load.setOnAction(e -> action.writeRules(rapportText, window, primaryStage));
 
-
-		
-		
-		
-		
-		
 		layout.setRight(right);
 		layout.setTop(top);
 		layout.setCenter(center);
@@ -338,12 +359,13 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		window.setFullScreen(true);
 	}
 
-
 	public static void closeProgram() {
 		try {
 			main.conn.close();
 			window.close();
+
 			System.out.println("Programma afgesloten, en connectie uit");
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
