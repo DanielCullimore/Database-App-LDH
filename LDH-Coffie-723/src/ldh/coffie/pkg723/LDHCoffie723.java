@@ -24,7 +24,7 @@ public class LDHCoffie723 {
     static String statusProgram;
     static String singleUserStatus;
     
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
     
     connDb = new ConnectionDatabase();        
     qStatments = new QueriesSelection();

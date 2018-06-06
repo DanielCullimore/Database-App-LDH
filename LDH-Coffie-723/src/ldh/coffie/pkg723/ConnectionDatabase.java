@@ -17,9 +17,9 @@ import java.sql.SQLException;
 
 
 public class ConnectionDatabase {
-    private static String url = "jdbc:sqlserver://localhost:1433;databaseName=AuditBlackBox";    
-    private static String username = "TestDB";   
-    private static String password = "1234567";
+    private static String url = "jdbc:sqlserver://localhost:1433;integratedSecurity=true;databasename=AuditBlackBox";   
+   // private static String username = "TestDB";   
+   // private static String password = "1234567";
     private static Connection conn;
     
     private static String signalUrl = "jdbc:sqlserver://localhost:1433;databaseName=TestConnectionDatabase";    
@@ -32,10 +32,11 @@ public class ConnectionDatabase {
     public ConnectionDatabase(){
     }
    
-    public static Connection getConnection() {
+    public static Connection getConnection() throws ClassNotFoundException {
     try{
         
-      conn = DriverManager.getConnection(url,username,password);
+      Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+      conn = DriverManager.getConnection(url);
       System.out.println("Verbinding gemaakt");
        
        }
@@ -74,7 +75,6 @@ public class ConnectionDatabase {
         }
         else {
             java.sql.Statement stat = signalConn.createStatement();
-           // String query = "CREATE TABLE LoginInfo (Status varchar(20));";
             String query = "CREATE TABLE LoginInfo (Status int);";
             stat.execute(query);
             query = "INSERT INTO LoginInfo(Status) VALUES (1);";
