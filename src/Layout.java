@@ -361,8 +361,16 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 
 	public static void closeProgram() {
 		try {
+			java.sql.Statement stat = main.conn.createStatement();
+			String query = "DROP TABLE LoginInfo;";
+			stat.execute(query);
 			main.conn.close();
+			
 			window.close();
+			
+
+			
+	
 
 			System.out.println("Programma afgesloten, en connectie uit");
 

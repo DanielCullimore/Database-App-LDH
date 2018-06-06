@@ -1,45 +1,62 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
+
 import javafx.application.Application;
 
+/**
+ * @author Daniel Mensche
+ */
 public class main {
 
-	public static Connection conn;
-	public static String[] launch;
+	/**
+	 * @param args
+	 *            the command line arguments
+	 */
 
-	public static void main(String[] args) throws ClassNotFoundException, IOException {
+	static ConnectionDatabase connDb;
+	static Connection conn;
+	static QueriesSelection qStatments;
+	static MultiAccessRestriction access;
+	static String statusProgram;
+	static String singleUserStatus;
 
-		try {
+	public static void main(String[] args) throws SQLException {
 
-			InputStream is = new FileInputStream("src/connection.txt");
-			BufferedReader buf = new BufferedReader(new InputStreamReader(is));
-			String URL = buf.readLine();
+		connDb = new ConnectionDatabase();
+		qStatments = new QueriesSelection();
+		access = new MultiAccessRestriction();
+		statusProgram = "Running";
+		singleUserStatus = connDb.singleUserConnection();
 
-			launch = args;
-			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-			conn = DriverManager.getConnection(URL, "testAccount1", "Welkom01!");
-			System.out.println("Verbinding gemaakt");
-			launchProgram(launch);
-		}
+		if (statusProgram.equals("Running")) {
 
-		catch (SQLException e) {
-			e.printStackTrace();
+			if (singleUserStatus.equals("Access Granted")) {
 
+				conn = connDb.getConnection();
+//				qStatments.getIDPersoon(conn);
+				launchProgram(args);
+				
+				
+
+			} else if (singleUserStatus.equals("Access Denied")) {
+				System.out.println("Only one user can access the program at the time");
+			}
+		} else if (statusProgram.equals("Deny Instance")) {
+			System.out.println("Only 1 instance can run");
+		} else if (statusProgram.equals("Access Deny")) {
+			System.out.println("Could not start program, try again later");
 		}
 
 	}
+	
 
 	public static void launchProgram(String[] args) {
 		Application.launch(Layout.class, args);
 	}
-
 }
