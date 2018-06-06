@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ldh.coffie.pkg723;
+package ldh.coffie.pkg724;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 /**
  * @author Daniel Mensche
  */
-public class LDHCoffie723 {
+public class LDHCoffie724 {
 
     /**
      * @param args the command line arguments
@@ -22,26 +22,18 @@ public class LDHCoffie723 {
     static QueriesSelection qStatments;
     static MultiAccessRestriction access;
     static String statusProgram;
-    static String singleUserStatus;
     
     public static void main(String[] args) throws SQLException {
     
     connDb = new ConnectionDatabase();        
     qStatments = new QueriesSelection();
     access = new MultiAccessRestriction();
-    statusProgram = "Running";// access.restrictionControl();
-    singleUserStatus = connDb.singleUserConnection();
+    statusProgram = access.restrictionControl();
     
     if(statusProgram.equals("Running")){
-        
-        if (singleUserStatus.equals("Access Granted")){
-    
-            conn = connDb.getConnection();
-            qStatments.getIDPersoon(conn);
-            connDb.closeConnection(conn);
-        } else if (singleUserStatus.equals("Access Denied")){
-            System.out.println("Only one user can access the program at the time");
-        }
+    conn = connDb.getConnection();
+    qStatments.getIDPersoon(conn);
+    connDb.closeConnection(conn);
     }
     else if (statusProgram.equals("Deny Instance")){
         System.out.println("Only 1 instance can run");
