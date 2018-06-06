@@ -52,7 +52,7 @@ public class action {
 		StackPane done = new StackPane();
 		Label doneL = new Label("Alle Business rules zijn geladen.");
 		done.getChildren().add(doneL);
-		
+
 		ruler1.addEventFilter(WorkerStateEvent.WORKER_STATE_RUNNING, new EventHandler<WorkerStateEvent>() {
 
 			@Override
@@ -235,7 +235,6 @@ public class action {
 		};
 	}
 
-
 	public static void changeString(Dialog<String> dialog) throws IOException {
 
 		Optional<String> s = dialog.showAndWait();
@@ -250,7 +249,7 @@ public class action {
 
 			} catch (NoSuchElementException e) {
 
-			}finally {
+			} finally {
 				bw.flush();
 				bw.close();
 			}
@@ -258,9 +257,8 @@ public class action {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			pw.close();
-			System.out.println("Check4");
 
-		}finally {
+		} finally {
 
 		}
 
@@ -270,72 +268,24 @@ public class action {
 
 		conn = main.conn;
 
-		Task<?> writer = createWriter();
-		Thread rule1Thread = new Thread(writer);
-
-		// Dialog<?> dialog = new Dialog<>();
 		Alert dialog = new Alert(Alert.AlertType.INFORMATION);
 		dialog.setHeaderText(null);
 		dialog.setGraphic(null);
-		dialog.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
 		dialog.initOwner(primaryStage);
 
 		dialog.setTitle("Schrijven");
 
-		ProgressIndicator p = new ProgressIndicator(-1);
-
 		dialog.initStyle(StageStyle.UTILITY);
 
-		StackPane sp = new StackPane();
-		sp.getChildren().add(p);
-		dialog.getDialogPane().setContent(sp);
-		
 		StackPane done = new StackPane();
 		Label t = new Label("Het overschrijven was succesvol");
 		done.getChildren().add(t);
-		
-		
-		
 
-		writer.addEventFilter(WorkerStateEvent.WORKER_STATE_RUNNING, new EventHandler<WorkerStateEvent>() {
+		dialog.getDialogPane().setContent(done);
+		cvsWriter.write(primaryStage);
 
-			@Override
-			public void handle(WorkerStateEvent t) {
-
-				dialog.showAndWait();
-			}
-		});
-
-		writer.addEventFilter(WorkerStateEvent.WORKER_STATE_SUCCEEDED, new EventHandler<WorkerStateEvent>() {
-
-			@Override
-			public void handle(WorkerStateEvent t) {
-				dialog.getDialogPane().setContent(done);
-				dialog.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
-			
-			}
-		});
-
-		rule1Thread.start();
+		dialog.showAndWait();
 
 	}
 
-	private static Task<?> createWriter() {
-		return new Task<Object>() {
-			@Override
-			protected Object call() throws Exception {
-
-				try {
-
-					cvsWriter.write();
-					return true;
-				} catch (NullPointerException e) {
-					System.out.println("Fout");
-				}
-				return null;
-
-			}
-		};
-
-	}
 }

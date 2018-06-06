@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 /**
  *
@@ -27,25 +28,35 @@ public class cvsWriter {
 	 * @param args
 	 *            the command line arguments
 	 */
-	public static void write() {		
+	public static void write(Stage primaryStage) {		
 		String filePath = ".\\Desktop\\export.txt";
 		File export = new File(filePath);
+		
+        FileChooser fileChooser = new FileChooser();
+        
+        //Set extension filter
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+        
+        //Show save file dialog
+        File file = fileChooser.showSaveDialog(primaryStage);
+   		
 
 		try {
 			String connectionString = "jdbc:sqlserver://localhost:1433;databaseName=AuditBlackBox";
 			Connection conn = DriverManager.getConnection(connectionString, "testAccount1", "Welkom01!");
 			System.out.println("verbinding gemaakt...");
 
-			writeQ1ToCsv(conn, export, filePath);
-			writeQ2ToCsv(conn, export, filePath);
-			writeQ3ToCsv(conn, export, filePath);
-			writeQ4ToCsv(conn, export, filePath);
-			writeQ5ToCsv(conn, export, filePath);
-			writeQ6ToCsv(conn, export, filePath);
-			writeQ7ToCsv(conn, export, filePath);
-			writeQ8ToCsv(conn, export, filePath);
-			writeQ9ToCsv(conn, export, filePath);
-			writeQ10ToCsv(conn, export, filePath);
+			writeQ1ToCsv(conn, file, filePath);
+			writeQ2ToCsv(conn, file, filePath);
+			writeQ3ToCsv(conn, file, filePath);
+			writeQ4ToCsv(conn, file, filePath);
+			writeQ5ToCsv(conn, file, filePath);
+			writeQ6ToCsv(conn, file, filePath);
+			writeQ7ToCsv(conn, file, filePath);
+			writeQ8ToCsv(conn, file, filePath);
+			writeQ9ToCsv(conn, file, filePath);
+			writeQ10ToCsv(conn, file, filePath);
 
 		} catch (SQLException E) {
 			System.out.println("Foutmelding: " + E.getMessage());
@@ -63,7 +74,7 @@ public class cvsWriter {
 			ResultSet res = stat.executeQuery(useQuery);
 
 			try {
-				FileWriter fw = new FileWriter(filePath, false);
+				FileWriter fw = new FileWriter(export);
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter pw = new PrintWriter(bw);
 
@@ -98,7 +109,7 @@ public class cvsWriter {
 			ResultSet res = stat.executeQuery(useQuery);
 
 			try {
-				FileWriter fw = new FileWriter(filePath, true);
+				FileWriter fw = new FileWriter(export);
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter pw = new PrintWriter(bw);
 
@@ -133,7 +144,7 @@ public class cvsWriter {
 			ResultSet res = stat.executeQuery(useQuery);
 
 			try {
-				FileWriter fw = new FileWriter(filePath, true);
+				FileWriter fw = new FileWriter(export);
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter pw = new PrintWriter(bw);
 
@@ -168,7 +179,7 @@ public class cvsWriter {
 			ResultSet res = stat.executeQuery(useQuery);
 
 			try {
-				FileWriter fw = new FileWriter(filePath, true);
+				FileWriter fw = new FileWriter(export);
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter pw = new PrintWriter(bw);
 
@@ -203,7 +214,7 @@ public class cvsWriter {
 			ResultSet res = stat.executeQuery(useQuery);
 
 			try {
-				FileWriter fw = new FileWriter(filePath, true);
+				FileWriter fw = new FileWriter(export);
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter pw = new PrintWriter(bw);
 
@@ -238,7 +249,7 @@ public class cvsWriter {
 			ResultSet res = stat.executeQuery(useQuery);
 
 			try {
-				FileWriter fw = new FileWriter(filePath, true);
+				FileWriter fw = new FileWriter(export);
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter pw = new PrintWriter(bw);
 
@@ -273,7 +284,7 @@ public class cvsWriter {
 			ResultSet res = stat.executeQuery(useQuery);
 
 			try {
-				FileWriter fw = new FileWriter(filePath, true);
+				FileWriter fw = new FileWriter(export);
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter pw = new PrintWriter(bw);
 
@@ -308,7 +319,7 @@ public class cvsWriter {
 			ResultSet res = stat.executeQuery(useQuery);
 
 			try {
-				FileWriter fw = new FileWriter(filePath, true);
+				FileWriter fw = new FileWriter(export);
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter pw = new PrintWriter(bw);
 
@@ -343,7 +354,7 @@ public class cvsWriter {
 			ResultSet res = stat.executeQuery(useQuery);
 
 			try {
-				FileWriter fw = new FileWriter(filePath, true);
+				FileWriter fw = new FileWriter(export);
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter pw = new PrintWriter(bw);
 
@@ -378,7 +389,7 @@ public class cvsWriter {
 			ResultSet res = stat.executeQuery(useQuery);
 
 			try {
-				FileWriter fw = new FileWriter(filePath, true);
+				FileWriter fw = new FileWriter(export);
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter pw = new PrintWriter(bw);
 
