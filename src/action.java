@@ -30,13 +30,9 @@ public class action {
 
 		a.setText("");
 
-		Layout.load.setDisable(true);
-		Layout.ProgBar.setProgress(0);
-
 		Task<?> ruler1 = createRuler1(conn, a);
 		Thread rule1Thread = new Thread(ruler1);
 
-		// Dialog<?> dialog = new Dialog<>();
 		Alert dialog = new Alert(Alert.AlertType.INFORMATION);
 		dialog.setHeaderText(null);
 		dialog.setGraphic(null);
@@ -53,6 +49,10 @@ public class action {
 		sp.getChildren().add(p);
 		dialog.getDialogPane().setContent(sp);
 
+		StackPane done = new StackPane();
+		Label doneL = new Label("Alle Business rules zijn geladen.");
+		done.getChildren().add(doneL);
+		
 		ruler1.addEventFilter(WorkerStateEvent.WORKER_STATE_RUNNING, new EventHandler<WorkerStateEvent>() {
 
 			@Override
@@ -66,18 +66,12 @@ public class action {
 
 			@Override
 			public void handle(WorkerStateEvent t) {
-				dialog.close();
-				Layout.load.setDisable(false);
+				dialog.getDialogPane().setContent(done);
+				dialog.getDialogPane().lookupButton(ButtonType.OK).setDisable(false);
 			}
 		});
 
 		rule1Thread.start();
-		// try {
-		// rule1Thread.join();
-		// } catch (InterruptedException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
 
 	}
 
@@ -241,34 +235,6 @@ public class action {
 		};
 	}
 
-	public static Task<?> createRuler2(Connection conn, TextArea a) {
-		return new Task<Object>() {
-			@Override
-			protected Object call() throws Exception {
-
-				writeRule4(conn, a);
-				writeRule5(conn, a);
-				writeRule6(conn, a);
-
-				return true;
-			}
-		};
-	}
-
-	public static Task<?> createRuler3(Connection conn, TextArea a) {
-		return new Task<Object>() {
-			@Override
-			protected Object call() throws Exception {
-
-				writeRule7(conn, a);
-				writeRule8(conn, a);
-				writeRule9(conn, a);
-				writeRule10(conn, a);
-
-				return true;
-			}
-		};
-	}
 
 	public static void changeString(Dialog<String> dialog) throws IOException {
 
@@ -281,13 +247,21 @@ public class action {
 
 			try {
 				bw.write(s.get());
+
 			} catch (NoSuchElementException e) {
-				bw.write("jdbc:sqlserver://localhost:1433;DatabaseName=AuditBlackBox");
+
+			}finally {
+				bw.flush();
+				bw.close();
 			}
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			pw.close();
+			System.out.println("Check4");
+
+		}finally {
+
 		}
 
 	}

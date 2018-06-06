@@ -15,6 +15,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javafx.stage.FileChooser;
+
 /**
  *
  * @author megas
@@ -25,9 +27,8 @@ public class cvsWriter {
 	 * @param args
 	 *            the command line arguments
 	 */
-	public static void write() {
-		// TODO code application logic here
-		String filePath = "C:\\Users\\Michiel\\Documents\\GitHub\\Database-App-LDH\\src\\export.txt";
+	public static void write() {		
+		String filePath = ".\\Desktop\\export.txt";
 		File export = new File(filePath);
 
 		try {
@@ -46,8 +47,6 @@ public class cvsWriter {
 			writeQ9ToCsv(conn, export, filePath);
 			writeQ10ToCsv(conn, export, filePath);
 
-			conn.close();
-			System.out.println("verbinding verbroken...");
 		} catch (SQLException E) {
 			System.out.println("Foutmelding: " + E.getMessage());
 		}
@@ -399,7 +398,7 @@ public class cvsWriter {
 			}
 
 		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(null, "Er is een error gevonden\n" + e.getMessage());
+//			JOptionPane.showMessageDialog(null, "Er is een error gevonden\
 		}
 	}
 

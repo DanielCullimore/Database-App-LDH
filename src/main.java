@@ -1,9 +1,11 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -21,15 +23,13 @@ public class main {
 
 	static ConnectionDatabase connDb;
 	static Connection conn;
-	static QueriesSelection qStatments;
 	static MultiAccessRestriction access;
 	static String statusProgram;
 	static String singleUserStatus;
 
-	public static void main(String[] args) throws SQLException {
+	public static void main(String[] args) throws SQLException, IOException {
 
 		connDb = new ConnectionDatabase();
-		qStatments = new QueriesSelection();
 		access = new MultiAccessRestriction();
 		statusProgram = "Running";
 		singleUserStatus = connDb.singleUserConnection();
@@ -39,10 +39,7 @@ public class main {
 			if (singleUserStatus.equals("Access Granted")) {
 
 				conn = connDb.getConnection();
-//				qStatments.getIDPersoon(conn);
 				launchProgram(args);
-				
-				
 
 			} else if (singleUserStatus.equals("Access Denied")) {
 				System.out.println("Only one user can access the program at the time");
@@ -54,7 +51,6 @@ public class main {
 		}
 
 	}
-	
 
 	public static void launchProgram(String[] args) {
 		Application.launch(Layout.class, args);
