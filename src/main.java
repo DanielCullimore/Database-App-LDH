@@ -17,8 +17,8 @@ import javafx.application.Application;
 public class main {
 
 	/**
-	 * @param args
-	 *            the command line arguments
+	 * @Auther Michiel Maas en Daniel Mensche
+	 * Deze class maakt connectie met de server, en zorgt er voor dat de ServerString correct is en maar een iemand tegelijkertijd op de server kan
 	 */
 
 	static ConnectionDatabase connDb;
@@ -38,6 +38,8 @@ public class main {
 		singleUserStatus = connDb.singleUserConnection();
 
 		try {
+			
+		
 		if (statusProgram.equals("Running")) {
 			if (singleUserStatus.equals("Access Granted")) {
 

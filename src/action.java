@@ -158,8 +158,8 @@ public class action {
 					+ "  join Persoon P on P.MedewerkerID = A.GewijzigdDoor "
 					+ "  join PersoonCodes PC on PC.PersoonID = P.ID "
 					+ "  join [AfasProfit-Export] AP on AP.EmployeeUsername = PC.Code "
-					+ "  where AP.ContractEndDate < GETDATE() AND AP.EmployerName = '" + main.q.werkeenheidADExport
-					+ "' group by PC.Code, PC.PersoonID";
+					+ "  where AP.ContractEndDate < GETDATE() AND AP.EmployerName = '" + main.q.werkeenheidProfit + "'"
+					+ " group by PC.Code, PC.PersoonID";
 
 			ResultSet res = stat.executeQuery(q);
 

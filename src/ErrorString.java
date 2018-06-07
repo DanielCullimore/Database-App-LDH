@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import com.sun.xml.internal.ws.dump.LoggingDumpTube.Position;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,7 +17,6 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -32,7 +29,8 @@ public class ErrorString extends Application {
         launch(args);
     }
 
-    @Override
+    @SuppressWarnings("resource")
+	@Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Foute String");
 		Image logo = new Image("/legerIcon.png");

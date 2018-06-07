@@ -33,6 +33,10 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
+/*
+ * Author: Michiel Maas
+ * Deze class set de layout van het laat scherm. Eerste maakt het alle Elements aan, en daarna worden ze ingezet
+ */
 
 public class Layout extends Application implements EventHandler<ActionEvent> {
 	// Checker
@@ -52,7 +56,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 	static String name = "Michiel";
 	static String eenheid;
 
-	// Center
+	// Center met Rules
 	static Button load;
 	static Label bRules;
 	static Label bRule1;

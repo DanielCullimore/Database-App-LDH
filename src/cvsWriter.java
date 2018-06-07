@@ -47,27 +47,29 @@ public class cvsWriter {
 			Connection conn = DriverManager.getConnection(connectionString, "testAccount1", "Welkom01!");
 			System.out.println("verbinding gemaakt...");
 
-			writeQ1ToCsv(conn, file, filePath);
-			writeQ2ToCsv(conn, file, filePath);
-			writeQ3ToCsv(conn, file, filePath);
-			writeQ4ToCsv(conn, file, filePath);
-			writeQ5ToCsv(conn, file, filePath);
-			writeQ6ToCsv(conn, file, filePath);
-			writeQ7ToCsv(conn, file, filePath);
-			writeQ8ToCsv(conn, file, filePath);
-			writeQ9ToCsv(conn, file, filePath);
-			writeQ10ToCsv(conn, file, filePath);
+			Query q = new Query();
+			q.setEenheid();
+			
+			writeQ1ToCsv(conn, file, filePath, q);
+			writeQ2ToCsv(conn, file, filePath, q);
+			writeQ3ToCsv(conn, file, filePath, q);
+			writeQ4ToCsv(conn, file, filePath, q);
+			writeQ5ToCsv(conn, file, filePath, q);
+			writeQ6ToCsv(conn, file, filePath, q);
+			writeQ7ToCsv(conn, file, filePath, q);
+			writeQ8ToCsv(conn, file, filePath, q);
+			writeQ9ToCsv(conn, file, filePath, q);
+			writeQ10ToCsv(conn, file, filePath, q);
 
 		} catch (SQLException E) {
 			System.out.println("Foutmelding: " + E.getMessage());
 		}
 	}
 
-	public static void writeQ1ToCsv(Connection conn, File export, String filePath) {
+	public static void writeQ1ToCsv(Connection conn, File export, String filePath, Query q) {
 
 		String found;
-		Query query = new Query();
-		String useQuery = query.getQuery1();
+		String useQuery = q.getQuery1();
 
 		try {
 			Statement stat = conn.createStatement();
@@ -98,11 +100,10 @@ public class cvsWriter {
 		}
 	}
 
-	public static void writeQ2ToCsv(Connection conn, File export, String filePath) {
+	public static void writeQ2ToCsv(Connection conn, File export, String filePath, Query q) {
 
 		String found;
-		Query query = new Query();
-		String useQuery = query.getQuery2();
+		String useQuery = q.getQuery2();
 
 		try {
 			Statement stat = conn.createStatement();
@@ -133,11 +134,10 @@ public class cvsWriter {
 		}
 	}
 
-	public static void writeQ3ToCsv(Connection conn, File export, String filePath) {
+	public static void writeQ3ToCsv(Connection conn, File export, String filePath, Query q) {
 
 		String found;
-		Query query = new Query();
-		String useQuery = query.getQuery3();
+		String useQuery = q.getQuery3();
 
 		try {
 			Statement stat = conn.createStatement();
@@ -168,11 +168,10 @@ public class cvsWriter {
 		}
 	}
 
-	public static void writeQ4ToCsv(Connection conn, File export, String filePath) {
+	public static void writeQ4ToCsv(Connection conn, File export, String filePath, Query q) {
 
 		String found;
-		Query query = new Query();
-		String useQuery = query.getQuery4();
+		String useQuery = q.getQuery4();
 
 		try {
 			Statement stat = conn.createStatement();
@@ -203,11 +202,10 @@ public class cvsWriter {
 		}
 	}
 
-	public static void writeQ5ToCsv(Connection conn, File export, String filePath) {
+	public static void writeQ5ToCsv(Connection conn, File export, String filePath, Query q) {
 
 		String found;
-		Query query = new Query();
-		String useQuery = query.getQuery5();
+		String useQuery = q.getQuery5();
 
 		try {
 			Statement stat = conn.createStatement();
@@ -238,11 +236,10 @@ public class cvsWriter {
 		}
 	}
 
-	public static void writeQ6ToCsv(Connection conn, File export, String filePath) {
+	public static void writeQ6ToCsv(Connection conn, File export, String filePath, Query q) {
 
 		String found;
-		Query query = new Query();
-		String useQuery = query.getQuery6();
+		String useQuery = q.getQuery6();
 
 		try {
 			Statement stat = conn.createStatement();
@@ -273,11 +270,10 @@ public class cvsWriter {
 		}
 	}
 
-	public static void writeQ7ToCsv(Connection conn, File export, String filePath) {
+	public static void writeQ7ToCsv(Connection conn, File export, String filePath, Query q) {
 
 		String found;
-		Query query = new Query();
-		String useQuery = query.getQuery7();
+		String useQuery = q.getQuery7();
 
 		try {
 			Statement stat = conn.createStatement();
@@ -308,11 +304,10 @@ public class cvsWriter {
 		}
 	}
 
-	public static void writeQ8ToCsv(Connection conn, File export, String filePath) {
+	public static void writeQ8ToCsv(Connection conn, File export, String filePath, Query q) {
 
 		String found;
-		Query query = new Query();
-		String useQuery = query.getQuery8();
+		String useQuery = q.getQuery8();
 
 		try {
 			Statement stat = conn.createStatement();
@@ -343,11 +338,10 @@ public class cvsWriter {
 		}
 	}
 
-	public static void writeQ9ToCsv(Connection conn, File export, String filePath) {
+	public static void writeQ9ToCsv(Connection conn, File export, String filePath, Query q) {
 
 		String found;
-		Query query = new Query();
-		String useQuery = query.getQuery9();
+		String useQuery = q.getQuery9();
 
 		try {
 			Statement stat = conn.createStatement();
@@ -378,11 +372,10 @@ public class cvsWriter {
 		}
 	}
 
-	public static void writeQ10ToCsv(Connection conn, File export, String filePath) {
+	public static void writeQ10ToCsv(Connection conn, File export, String filePath, Query q) {
 
 		String found;
-		Query query = new Query();
-		String useQuery = query.getQuery10();
+		String useQuery = q.getQuery10();
 
 		try {
 			Statement stat = conn.createStatement();

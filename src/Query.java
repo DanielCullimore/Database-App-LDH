@@ -1,6 +1,7 @@
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -75,7 +76,7 @@ public class Query {
 	String werkeenheidClever = "";
 	String werkeenheidProfit = "";
 	String werkeenheidADExport = "";
-	
+
 	public String getWerkeenheidClever() {
 		return werkeenheidClever;
 	}
@@ -169,6 +170,31 @@ public class Query {
 	}
 
 	public void setEenheid() {
+		try {
+			Statement stat = main.conn.createStatement();
+			String query = "SELECT DISTINCT PC.Code " + 
+					"FROM Persoon P " + 
+					"LEFT JOIN PersoonCodes PC ON P.id = PC.PersoonID " + 
+					"JOIN TeamLid T ON PC.PersoonID = T.PersoonID " + 
+					"where PC.Code in " + 
+					"(SELECT A.Username_Pre2000 FROM [AD-Export] A where ParentContainer like '002%' or ParentContainer like '018%')" + 
+					"AND t.TeamID IS NULL";
+			
+			ResultSet res = stat.executeQuery(query);
+			ArrayList<String> admins = new ArrayList<>();
+			while(res.next()) {
+				admins.add(res.getString("Code"));
+			}
+			
+			if (admins.contains(System.getProperty("user.name"))) {
+				return;
+			}
+			
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		setClever();
 		setProfit();
 		setExport();
@@ -186,10 +212,14 @@ public class Query {
 					+ "'";
 			ResultSet res = stat.executeQuery(query);
 			System.out.println(System.getProperty("user.name"));
-			
+
 			while (res.next()) {
 				werkeenheidClever = res.getString("naam");
 
+			}
+
+			if (werkeenheidClever == null) {
+				return;
 			}
 
 			setQuery4(werkeenheidClever);
@@ -212,11 +242,12 @@ public class Query {
 
 			while (res.next()) {
 				werkeenheidProfit = res.getString("EmployerName");
-				System.out.println(werkeenheidProfit);
+				if (werkeenheidProfit == null) {
+					return;
+				}
+
 			}
-			
-			Layout.eenheid = werkeenheidProfit;
-			
+
 			setQuery2(werkeenheidProfit);
 			setQuery3(werkeenheidProfit);
 			setQuery8(werkeenheidProfit);
@@ -237,6 +268,9 @@ public class Query {
 
 			while (res.next()) {
 				werkeenheidADExport = res.getString("ParentContainer");
+				if (werkeenheidADExport == null) {
+					return;
+				}
 			}
 		} catch (
 
