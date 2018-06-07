@@ -31,7 +31,7 @@ public class main {
 	public static void main(String[] args) throws SQLException, IOException {
 
 		
-		q = new Query();
+		q = new Query();	
 		connDb = new ConnectionDatabase();
 		access = new MultiAccessRestriction();
 		statusProgram = "Running";

@@ -215,6 +215,7 @@ public class Query {
 				System.out.println(werkeenheidProfit);
 			}
 			
+			Layout.eenheid = werkeenheidProfit;
 			
 			setQuery2(werkeenheidProfit);
 			setQuery3(werkeenheidProfit);

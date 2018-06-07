@@ -64,6 +64,8 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 	Label welkom;
 	Label team;
 	Button logOut;
+	static String name = "Michiel";
+	static String eenheid = "Programmer";
 
 	Button loadAD;
 	Button loadProfit;
@@ -142,12 +144,10 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		legerIcon.setFitWidth(90);
 		legerIcon.setFitHeight(90);
 
-		String name = "Michiel";
 		welkom = new Label("Welkom " + name);
 		welkom.setFont(new Font(25));
 		welkom.setTextFill(Color.WHITE);
 
-		String eenheid = "Programmer";
 		team = new Label("Eenheid: " + eenheid);
 		team.setFont(new Font(25));
 		team.setTextFill(Color.WHITE);
