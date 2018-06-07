@@ -3,11 +3,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.NoSuchElementException;
-import java.util.Observable;
 import java.util.Optional;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -76,12 +73,12 @@ public class action {
 		});
 
 		rule1Thread.start();
-		try {
-			rule1Thread.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// try {
+		// rule1Thread.join();
+		// } catch (InterruptedException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 
 	}
 
@@ -112,7 +109,7 @@ public class action {
 
 		}
 
-	}	
+	}
 
 	public static void writeRule2(Connection con, TextArea a, Query q) {
 		// Business Rule 2: Medewerler uitdienst in profit, maar account is nog actief
@@ -306,7 +303,8 @@ public class action {
 
 			String found = "";
 			while (res.next()) {
-				found = found + "	De RDS naam van " + res.getString("EmployeeUsername") + " bestaat niet in Clever \n";
+				found = found + "	De RDS naam van " + res.getString("EmployeeUsername")
+						+ " bestaat niet in Clever \n";
 				count++;
 			}
 			a.appendText("CleverNew <> Profit RDS naam in Clever bestaat niet in Clever:  " + count + "\n");
@@ -389,22 +387,19 @@ public class action {
 			protected Object call() throws Exception {
 
 				try {
-					Query q = new Query();
-
-					writeRule1(conn, a, q);
-					writeRule2(conn, a, q);
-					writeRule3(conn, a, q);
-					writeRule4(conn, a, q);
-					writeRule5(conn, a, q);
-					writeRule6(conn, a, q);
-					writeRule7(conn, a, q);
-					writeRule8(conn, a, q);
-					writeRule9(conn, a, q);
-					writeRule10(conn, a, q);
+					writeRule1(conn, a, main.q);
+					writeRule2(conn, a, main.q);
+					writeRule3(conn, a, main.q);
+					writeRule4(conn, a, main.q);
+					writeRule5(conn, a, main.q);
+					writeRule6(conn, a, main.q);
+					writeRule7(conn, a, main.q);
+					writeRule8(conn, a, main.q);
+					writeRule9(conn, a, main.q);
+					writeRule10(conn, a, main.q);
 
 					return true;
 				} catch (NullPointerException e) {
-					System.out.println("Fout");
 				}
 				return null;
 
@@ -464,48 +459,41 @@ public class action {
 		dialog.showAndWait();
 
 	}
-	
-	public static void setImpactTable()
-	{
+
+	public static void setImpactTable() {
 		conn = main.conn;
 		ObservableList<Gebruiker> g = FXCollections.observableArrayList();
-		
-		
+
 		Statement stat;
 		try {
 			stat = conn.createStatement();
 
-		String q = "SELECT PC.Code, PC.PersoonID, count(A.GewijzigdDoor) as aantal_Activiteit " + 
-				"  FROM [AuditBlackBox].[dbo].[Activiteit] A " + 
-				"  join Persoon P on P.MedewerkerID = A.GewijzigdDoor " + 
-				"  join PersoonCodes PC on PC.PersoonID = P.ID " + 
-				"  join [AfasProfit-Export] AP on AP.EmployeeUsername = PC.Code " + 
-				"  where AP.ContractEndDate < GETDATE() " + 
-				"  group by PC.Code, PC.PersoonID";
-		
-		ResultSet res = stat.executeQuery(q);
-		
-		String found = "";
-		while (res.next()) {
-			Gebruiker newGebruiker = new Gebruiker(res.getString("Code"), res.getString("PersoonID"), res.getString("aantal_Activiteit"));
-			g.add(newGebruiker);
-//			System.out.println(g.size());
-//			System.out.println(newGebruiker.getUserID());
-//			System.out.println(newGebruiker.getUsername());
-//			System.out.println(newGebruiker.getAantalOvertredingen());
-		}
-		
-		Layout.impactTable.setItems(g);
-		
-		
-		
+			String q = "SELECT PC.Code, PC.PersoonID, count(A.GewijzigdDoor) as aantal_Activiteit "
+					+ "  FROM [AuditBlackBox].[dbo].[Activiteit] A "
+					+ "  join Persoon P on P.MedewerkerID = A.GewijzigdDoor "
+					+ "  join PersoonCodes PC on PC.PersoonID = P.ID "
+					+ "  join [AfasProfit-Export] AP on AP.EmployeeUsername = PC.Code "
+					+ "  where AP.ContractEndDate < GETDATE() AND AP.EmployerName = '" + main.q.werkeenheidADExport +  "' group by PC.Code, PC.PersoonID";
+
+			ResultSet res = stat.executeQuery(q);
+
+			while (res.next()) {
+				Gebruiker newGebruiker = new Gebruiker(res.getString("Code"), res.getString("PersoonID"),
+						res.getString("aantal_Activiteit"));
+				g.add(newGebruiker);
+				System.out.println("test");
+			}
+
+			Layout.impactTable.setItems(g);
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
-		
+
+	}
+
+	public static void setEenheden(Query q) {
+		q.setEenheid();
 	}
 }

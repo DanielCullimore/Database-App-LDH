@@ -79,9 +79,8 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 	Label ADLabel;
 	Label CleverLabel;
 
-    TableView<String> table;
-	
-	
+	TableView<String> table;
+
 	TableView<ProfitEntry> profitTable;
 	TableView<mock> adTable;
 	TableView<mock> cleverTable;
@@ -116,10 +115,9 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 
 	Label rapport;
 	TextArea rapportText;
-	
-	//Impact
+
+	// Impact
 	static TableView<Gebruiker> impactTable;
-	
 
 	// center
 	static Button load;
@@ -175,13 +173,12 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		top.setSpacing(10);
 		top.setStyle(style);
 
-		
-		//CENTER
-		
+		// CENTER
+
 		load = new Button("Inladen Business Rules");
 		load.setMinWidth(680);
 		load.setMinHeight(100);
-//		
+		//
 
 		bRules = new Label("Business Rules");
 		rapport = new Label("Rapport");
@@ -245,7 +242,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		GridPane.setConstraints(bRule4, 1, 5);
 		GridPane.setConstraints(bRuleText4, 2, 5);
 		GridPane.setConstraints(bRule5, 1, 6);
-		GridPane.setConstraints(bRuleText5, 2,6);
+		GridPane.setConstraints(bRuleText5, 2, 6);
 		GridPane.setConstraints(bRule6, 1, 7);
 		GridPane.setConstraints(bRuleText6, 2, 7);
 		GridPane.setConstraints(bRule7, 1, 8);
@@ -266,7 +263,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		rapportText.setEditable(false);
 
 		center.setPadding(new Insets(25, 25, 25, 25));
-		
+
 		center.setHgap(20);
 		center.setVgap(10);
 
@@ -274,51 +271,43 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 				bRuleText4, bRule5, bRuleText5, bRule6, bRuleText6, bRule7, bRuleText7, bRule8, bRuleText8, bRule9,
 				bRuleText9, bRule10, bRuleText10, rapport, rapportText);
 
-
 		Button changeString = new Button("String");
 		changeString.setMinWidth(300);
 		changeString.setMinHeight(300);
-		GridPane.setConstraints(changeString, 1, 0);
+		GridPane.setConstraints(changeString, 13, 7, 1, 7);
+
+//		center.setGridLinesVisible(true);
 
 		Button toCvs = new Button("Write");
 		toCvs.setMinSize(300, 300);
-		GridPane.setConstraints(toCvs, 0, 1);
+		GridPane.setConstraints(toCvs, 13, 0, 1, 7);
 		toCvs.setOnAction(e -> action.write(window, primaryStage));
-		
+
 		Button impact = new Button("Impact laden");
 		impact.setOnAction(e -> action.setImpactTable());
 		impact.setMinWidth(680);
 		impact.setMinHeight(100);
 		GridPane.setConstraints(impact, 7, 0, 5, 1);
-		
-		
+
 		TableColumn<Gebruiker, String> usernameCol = new TableColumn<>("Gebruikersnaam");
 		usernameCol.setMinWidth(200);
 		usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
-		
-		TableColumn<Gebruiker, String> idCol  = new TableColumn<>("ID");
+
+		TableColumn<Gebruiker, String> idCol = new TableColumn<>("ID");
 		idCol.setMinWidth(200);
 		idCol.setCellValueFactory(new PropertyValueFactory<>("userID"));
-		
+
 		TableColumn<Gebruiker, String> numberCol = new TableColumn<>("Aantal overtredingen");
 		numberCol.setMinWidth(200);
 		numberCol.setCellValueFactory(new PropertyValueFactory<>("aantalOvertredingen"));
-		
 
-		
 		impactTable = new TableView<>();
-//		impactTable.setMinHeight(500);
+		// impactTable.setMinHeight(500);
 		impactTable.getColumns().addAll(usernameCol, idCol, numberCol);
-		
+
 		GridPane.setConstraints(impactTable, 7, 2, 5, 12);
-		
-		
-		
-		
+
 		center.getChildren().addAll(impact, impactTable);
-		
-		
-		
 
 		Dialog<String> dialog = new Dialog<>();
 		dialog.setTitle("Aanpassen van de Connection String");
@@ -369,7 +358,8 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 
 		// Optional<String> result = dialog.showAndWait();
 
-//		center.getChildren().addAll(load, changeString, toCvs);
+		// center.getChildren().addAll(load, changeString, toCvs);
+		center.getChildren().addAll(toCvs, changeString);
 
 		load.setOnAction(e -> action.writeRules(rapportText, window, primaryStage));
 
@@ -400,12 +390,8 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 			String query = "DROP TABLE LoginInfo;";
 			stat.execute(query);
 			main.conn.close();
-			
-			window.close();
-			
 
-			
-	
+			window.close();
 
 			System.out.println("Programma afgesloten, en connectie uit");
 

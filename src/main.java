@@ -26,9 +26,12 @@ public class main {
 	static MultiAccessRestriction access;
 	static String statusProgram;
 	static String singleUserStatus;
+	static Query q;
 
 	public static void main(String[] args) throws SQLException, IOException {
 
+		
+		q = new Query();
 		connDb = new ConnectionDatabase();
 		access = new MultiAccessRestriction();
 		statusProgram = "Running";
@@ -53,6 +56,7 @@ public class main {
 	}
 
 	public static void launchProgram(String[] args) {
+		action.setEenheden(q);
 		Application.launch(Layout.class, args);
 	}
 }
