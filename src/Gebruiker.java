@@ -10,21 +10,31 @@
  */
 public class Gebruiker {
     private String username;
-    private int userID;
-    private int aantalOvertredingen;
+    private String userID;
+    private String aantalOvertredingen;
     
-    public void setUsername(String username)
-    {
-        this.username = username;
-    }
     
-    public void setUserID(int userID)
-    {
-        this.userID = userID;
-    }
-    
-    public void setAantalOvertredingen(int aantalOvertedingen)
-    {
-        this.aantalOvertredingen = aantalOvertedingen;
-    }
+    public Gebruiker(String username, String userID, String aantalOvertredingen) {
+		super();
+		this.username = username;
+		this.userID = userID;
+		this.aantalOvertredingen = aantalOvertredingen;
+	}
+
+
+	public String getUsername() {
+		return username;
+	}
+
+
+	public String getUserID() {
+		return userID;
+	}
+
+
+	public String getAantalOvertredingen() {
+		return aantalOvertredingen;
+	}
+
+
 }

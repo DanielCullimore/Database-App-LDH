@@ -17,6 +17,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -115,6 +116,10 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 
 	Label rapport;
 	TextArea rapportText;
+	
+	//Impact
+	static TableView<Gebruiker> impactTable;
+	
 
 	// center
 	static Button load;
@@ -281,17 +286,36 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		toCvs.setOnAction(e -> action.write(window, primaryStage));
 		
 		Button impact = new Button("Impact laden");
+		impact.setOnAction(e -> action.setImpactTable());
 		impact.setMinWidth(680);
 		impact.setMinHeight(100);
 		GridPane.setConstraints(impact, 7, 0, 5, 1);
 		
 		
-//		TableColumn<String, Int> nameColumn = new TableColumn<>("Name");
+		TableColumn<Gebruiker, String> usernameCol = new TableColumn<>("Gebruikersnaam");
+		usernameCol.setMinWidth(200);
+		usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
+		
+		TableColumn<Gebruiker, String> idCol  = new TableColumn<>("ID");
+		idCol.setMinWidth(200);
+		idCol.setCellValueFactory(new PropertyValueFactory<>("userID"));
+		
+		TableColumn<Gebruiker, String> numberCol = new TableColumn<>("Aantal overtredingen");
+		numberCol.setMinWidth(200);
+		numberCol.setCellValueFactory(new PropertyValueFactory<>("aantalOvertredingen"));
+		
+
+		
+		impactTable = new TableView<>();
+//		impactTable.setMinHeight(500);
+		impactTable.getColumns().addAll(usernameCol, idCol, numberCol);
+		
+		GridPane.setConstraints(impactTable, 7, 2, 5, 12);
 		
 		
-	    table = new TableView<>();
 		
-		center.getChildren().addAll(impact);
+		
+		center.getChildren().addAll(impact, impactTable);
 		
 		
 		

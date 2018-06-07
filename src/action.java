@@ -3,9 +3,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import java.util.Observable;
 import java.util.Optional;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -460,5 +464,48 @@ public class action {
 		dialog.showAndWait();
 
 	}
+	
+	public static void setImpactTable()
+	{
+		conn = main.conn;
+		ObservableList<Gebruiker> g = FXCollections.observableArrayList();
+		
+		
+		Statement stat;
+		try {
+			stat = conn.createStatement();
 
+		String q = "SELECT PC.Code, PC.PersoonID, count(A.GewijzigdDoor) as aantal_Activiteit " + 
+				"  FROM [AuditBlackBox].[dbo].[Activiteit] A " + 
+				"  join Persoon P on P.MedewerkerID = A.GewijzigdDoor " + 
+				"  join PersoonCodes PC on PC.PersoonID = P.ID " + 
+				"  join [AfasProfit-Export] AP on AP.EmployeeUsername = PC.Code " + 
+				"  where AP.ContractEndDate < GETDATE() " + 
+				"  group by PC.Code, PC.PersoonID";
+		
+		ResultSet res = stat.executeQuery(q);
+		
+		String found = "";
+		while (res.next()) {
+			Gebruiker newGebruiker = new Gebruiker(res.getString("Code"), res.getString("PersoonID"), res.getString("aantal_Activiteit"));
+			g.add(newGebruiker);
+//			System.out.println(g.size());
+//			System.out.println(newGebruiker.getUserID());
+//			System.out.println(newGebruiker.getUsername());
+//			System.out.println(newGebruiker.getAantalOvertredingen());
+		}
+		
+		Layout.impactTable.setItems(g);
+		
+		
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+	}
 }
