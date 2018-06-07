@@ -181,16 +181,16 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		bRules = new Label("Business Rules");
 		rapport = new Label("Rapport");
 
-		bRule1 = new Label("   PROFIT <> PROFIT Medewerkernr en Dienstverbanden matchen niet: ");
-		bRule2 = new Label("   PROFIT <> PROFIT Citrix naam niet ingevuld bij Extra Info Veld: ");
-		bRule3 = new Label("   PROFIT <> AD Citrix naam in PROFIT bestaat niet in AD: ");
-		bRule4 = new Label("   PROFIT <> AD Medewerker uit dienst in CleverNew, account in AD ");
-		bRule5 = new Label("   CleverNew <> AD Citrix naam in CleverNew niet ingevuld");
-		bRule6 = new Label("   CleverNew <> AD Citrix naam in CleverNew bestaat niet in AD");
-		bRule7 = new Label("   CleverNew <> AD Medewerker uit dienst in CleverNew, account in AD");
-		bRule8 = new Label("   AD <> PROFIT AD Account, onbekend in Profit");
-		bRule9 = new Label("   AD <> CleverNew AD Account, onbekend in CleverNew");
-		bRule10 = new Label("   test");
+		bRule1 = new Label("   AD Account, onbekend in Profit:");
+		bRule2 = new Label("   Medewerker uit dienst in Profit, account is in AD actief: ");
+		bRule3 = new Label("   RDS User naam in Profit bestaat niet in de AD: ");
+		bRule4 = new Label("   RDS naam in Clevernew is niet ingevuld: ");
+		bRule5 = new Label("   RDS naam in CleverNew bestaat niet in AD: ");
+		bRule6 = new Label("   Medewerker uit dienst in CleverNew, account in AD actief: ");
+		bRule7 = new Label("   AD Account, onbekend in Clever: ");
+		bRule8 = new Label("   RDS User naam in Profit bestaat niet in Clever: ");
+		bRule9 = new Label("   Medewerker uit dienst in Profit, account is in Clever actief: ");
+		bRule10 = new Label("   RDS User naam in Clever bestaat niet in Afas Profit: ");
 
 		bRuleText1 = new TextField();
 		bRuleText2 = new TextField();
@@ -224,6 +224,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		bRule7.setFont(new Font(15));
 		bRule8.setFont(new Font(15));
 		bRule9.setFont(new Font(15));
+		bRule10.setFont(new Font(15));
 		rapport.setFont(new Font(15));
 
 		rapportText = new TextArea();

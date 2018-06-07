@@ -37,12 +37,12 @@ public class Query {
     		"FROM Persoon P JOIN PersoonCodes PC ON P.id = PC.PersoonID " + 
     		"JOIN Medewerker M ON P.id = M.PersoonID " + 
     		"JOIN teamlid tl on tl.PersoonID = pc.PersoonID " + 
-    		"JOIN team t on t.ID = tl.TeamID n" + 
+    		"JOIN team t on t.ID = tl.TeamID " + 
     		"JOIN OrganisatieEenheid o on  o.OrganisatieID = t.OrganisatieEenheidID " + 
-    		"WHERE PC.code = 'Andere Code' ";
+    		"WHERE PC.code = 'Andere Code'";
 
     //RDS naam in CleverNew bestaat niet in AD
-    String query5 = "SELECT pc.Code " + 
+    String query5 = "SELECT DISTINCT P.ID, pc.Code  " + 
     		"FROM Persoon P " + 
     		"JOIN PersoonCodes PC ON P.id = PC.PersoonID " + 
     		"JOIN Medewerker M ON P.id = M.PersoonID " + 
@@ -52,7 +52,7 @@ public class Query {
     		"WHERE PC.code NOT IN (SELECT A.Username_Pre2000 FROM [AD-Export] A)";
     
     //Medewerker uit dienst in CleverNew, account in AD actief
-    String query6 = "SELECT PC.Code " + 
+    String query6 = "SELECT DISTINCT P.ID, PC.Code " + 
     		"	FROM Persoon P " + 
     		"	JOIN PersoonCodes PC ON P.id = PC.PersoonID  " + 
     		"	JOIN Medewerker M ON P.id = M.PersoonID " + 
@@ -63,10 +63,10 @@ public class Query {
     		"FROM [AD-Export]A)";
 
     //AD Account, onbekend in Clever
-    String query7 = "SELECT A.Username_Pre2000" + 
+    String query7 = "SELECT A.Username_Pre2000 " + 
     		"FROM [AD-Export]A " + 
     		"WHERE A.Username_Pre2000 NOT IN(" + 
-    		"SELECT PC.Code" + 
+    		"SELECT PC.Code " + 
     		"FROM Persoon P JOIN PersoonCodes PC ON P.id = PC.PersoonID " + 
     		"JOIN Medewerker M ON P.id = M.PersoonID)";
 
@@ -80,19 +80,19 @@ public class Query {
     //Medewerker uit dienst in Profit, account is in Clever actief
     String query9 = "SELECT PR.EmployeeUsername " + 
     		"FROM [AfasProfit-Export] PR JOIN PersoonCodes PC ON PC.Code = PR.EmployeeUsername " + 
-    		"JOIN Persoon P ON PC.PersoonID = P.ID JOIN Medewerker M ON M.PersoonID = P.ID" + 
-    		"WHERE Pr.ContractEndDate < GETDATE() AND PC.CodesoortenID = 981" + 
-    		"AND PR.EmployeeUsername IN (SELECT PC.code" + 
-    		"FROM Persooncodes) ";
+    		"JOIN Persoon P ON PC.PersoonID = P.ID JOIN Medewerker M ON M.PersoonID = P.ID " + 
+    		"WHERE Pr.ContractEndDate < GETDATE() AND PC.CodesoortenID = 981 " + 
+    		"AND PR.EmployeeUsername IN (SELECT PC.code " + 
+    		"FROM Persooncodes)";
 
     //RDS User naam in Clever bestaat niet in Afas Profit
-    String query10 = "SELECT PC.Code" + 
-    		"	FROM Persoon P " + 
-    		"	JOIN PersoonCodes PC ON P.id = PC.PersoonID  " + 
-    		"	JOIN Medewerker M ON P.id = M.PersoonID " + 
-    		"	JOIN TeamLid tl on tl.PersoonID = pc.PersoonIDv" + 
-    		"	JOIN Team t on t.ID = tl.IDv" + 
-    		"	JOIN OrganisatieEenheid o on o.OrganisatieID = t.OrganisatieEenheidIDv" + 
+    String query10 = "SELECT PC.Code " + 
+    		"FROM Persoon P " + 
+    		"JOIN PersoonCodes PC ON P.id = PC.PersoonID " + 
+    		"JOIN Medewerker M ON P.id = M.PersoonID " + 
+    		"JOIN TeamLid tl on tl.PersoonID = pc.PersoonID " + 
+    		"JOIN Team t on t.ID = tl.ID " + 
+    		"JOIN OrganisatieEenheid o on o.OrganisatieID = t.OrganisatieEenheidID " + 
     		"WHERE PC.Code NOT IN (SELECT PR.EmployeeUsername " + 
     		"FROM [AfasProfit-Export] PR)";
 

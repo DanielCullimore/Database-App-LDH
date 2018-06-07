@@ -72,42 +72,93 @@ public class action {
 		});
 
 		rule1Thread.start();
+		try {
+			rule1Thread.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
-	public static void writeRule1(Connection con, TextArea a) {
-
-	}
-
-	public static void writeRule2(Connection con, TextArea a) {
-
-	}
-
-	public static void writeRule3(Connection con, TextArea a) {
-		// Business Rule 3:
-		// Citrix naam in PROFIT bestaat niet in de AD
+	public static void writeRule1(Connection con, TextArea a, Query q) {
+		// Business Rule 1:
+		// AD account onbekend in Profit
 		try {
 
-			// Layout.r.setWidth(20);
-
 			Statement stat = conn.createStatement();
-			String query = "SELECT username_pre2000 " + "FROM [AuditBlackBox].[dbo].[AD-Export] "
-					+ "WHERE username_pre2000 not in "
-					+ "(select EmployeeUsername FROM [AuditBlackBox].[dbo].[AfasProfit-Export])";
-
+			String query = q.getQuery1();
 			ResultSet res = stat.executeQuery(query);
 
 			int count = 0;
 
 			String found = "";
 			while (res.next()) {
-				found = found + "	Citrix naam " + res.getString("username_pre2000") + " is niet in gevuld in AD \n";
-				System.out.println(res.getString("username_pre2000"));
+				found = found + "	AD Account " + res.getString("username_pre2000") + " is onbekend in profit \n";
+				count++;
+			}
+			a.appendText("PROFIT <> AD - AD Account onbepkend in profit : " + count + "\n");
+			a.appendText(found);
+
+			Layout.bRuleText1.setText(Integer.toString(count));
+
+		} catch (SQLException e) {
+			a.appendText("Er is een error gevonden is het berekenen van Business Rule 1 \n");
+			a.appendText(e.getMessage() + "\n \n");
+
+		}
+
+	}	
+
+	public static void writeRule2(Connection con, TextArea a, Query q) {
+		// Business Rule 2: Medewerler uitdienst in profit, maar account is nog actief
+		// in clever
+		// AD account onbekend in Profit
+		try {
+
+			Statement stat = conn.createStatement();
+			String query = q.getQuery2();
+			ResultSet res = stat.executeQuery(query);
+
+			int count = 0;
+
+			String found = "";
+			while (res.next()) {
+				found = found + "	Medewerker " + res.getString("EmployeeUsername")
+						+ " is uit diesnt, maar nog actief in Clever\n";
+				count++;
+			}
+			a.appendText("PROFIT <> AD - Medewerker is uit diesnst, maar nog actief in Clever : " + count + "\n");
+			a.appendText(found);
+
+			Layout.bRuleText2.setText(Integer.toString(count));
+
+		} catch (SQLException e) {
+			a.appendText("Er is een error gevonden is het berekenen van Business Rule 2 \n");
+			a.appendText(e.getMessage() + "\n \n");
+
+		}
+
+	}
+
+	public static void writeRule3(Connection con, TextArea a, Query q) {
+		// Business Rule 3:
+		// Citrix naam in PROFIT bestaat niet in de AD
+		try {
+
+			Statement stat = conn.createStatement();
+			String query = q.getQuery3();
+			ResultSet res = stat.executeQuery(query);
+
+			int count = 0;
+
+			String found = "";
+			while (res.next()) {
+				found = found + "	Citrix naam " + res.getString("EmployeeUsername") + " is niet in gevuld in AD \n";
 				count++;
 			}
 			a.appendText("PROFIT <> AD - Citrix naam in PROFIT bestaat niet in de AD : " + count + "\n");
 			a.appendText(found);
-			System.out.println(count);
 
 			Layout.bRuleText3.setText(Integer.toString(count));
 
@@ -119,17 +170,13 @@ public class action {
 
 	}
 
-	public static void writeRule4(Connection con, TextArea a) {
+	public static void writeRule4(Connection con, TextArea a, Query q) {
 		// Business Rule 4:
-		// Medewerker uit dienst in profit, account is in AD actief
+		// RDS naam in Clevernew is niet ingevuld
 		try {
 
-			// Layout.r.setWidth(500);
-
 			Statement stat = conn.createStatement();
-			String query = "SELECT * " + "FROM [AuditBlackBox].[dbo].[AfasProfit-Export] PR "
-					+ "WHERE PR.ContractEndDate < GETDATE() AND PR.EmployeeUsername " + "IN (SELECT A.Username_Pre2000 "
-					+ "FROM [AD-Export] A)";
+			String query = q.getQuery4();
 
 			ResultSet res = stat.executeQuery(query);
 
@@ -137,14 +184,11 @@ public class action {
 
 			String found = "";
 			while (res.next()) {
-				found = found + "	Medewerker " + res.getString("EmployeeUsername")
-						+ " is uit diesnst maar actief in AD\n";
-				System.out.println(res.getString("EmployeeUsername"));
+				found = found + "	RDS naam " + res.getString("Code") + " is niet ingevuld \n";
 				count++;
 			}
-			a.appendText("PROFIT <> AD - : Medewerker uit dienst in profit, account is AD actief" + count + "\n");
+			a.appendText("Clever <> AD - : RDS naam in Clever is niet ingevuld" + count + "\n");
 			a.appendText(found);
-			System.out.println(count);
 
 			Layout.bRuleText4.setText(Integer.toString(count));
 
@@ -155,14 +199,13 @@ public class action {
 		}
 	}
 
-	public static void writeRule5(Connection con, TextArea a) {
+	public static void writeRule5(Connection con, TextArea a, Query q) {
 		// Business Rule 5:
-		// CleverNew <> AD Citrix naam in CleverNew niet ingevuld
+		// RDS naam in Clever bestaat niet in AD
 		try {
 
 			Statement stat = conn.createStatement();
-			String query = "SELECT PC.Code " + "FROM Persoon P JOIN PersoonCodes PC ON P.id = PC.PersoonID "
-					+ "JOIN Medewerker M ON P.id = M.PersoonID " + "WHERE PC.code = 'Andere Code'";
+			String query = q.getQuery5();
 
 			ResultSet res = stat.executeQuery(query);
 
@@ -170,40 +213,169 @@ public class action {
 
 			String found = "";
 			while (res.next()) {
-				found = found + "	De citrix naam van " + res.getString("Code") + "is niet in gevuld in Clever \n";
-				System.out.println(res.getString("Code"));
+				found = found + "	De RDS naam van " + res.getString("Code") + " bestaat niet in AD \n";
 				count++;
 			}
-			a.appendText("CleverNew <> AD Citrix naam in CleverNew niet ingevuld:  " + count + "\n");
+			a.appendText("CleverNew <> AD RDS naam in Clever bestaat niet in AD:  " + count + "\n");
 			a.appendText(found);
-			System.out.println(count);
 
 			Layout.bRuleText5.setText(Integer.toString(count));
 
 		} catch (SQLException e) {
-			a.appendText("Er is een error gevonden is het berekenen van Business Rule 3 \n");
+			a.appendText("Er is een error gevonden is het berekenen van Business Rule 5 \n");
 			a.appendText(e.getMessage() + "\n \n");
 
 		}
 	}
 
-	public static void writeRule6(Connection con, TextArea a) {
+	public static void writeRule6(Connection con, TextArea a, Query q) {
+		// Business Rule 6:
+		// Medewerker uit dienst in Clever, actief in AD
+		try {
+
+			Statement stat = conn.createStatement();
+			String query = q.getQuery6();
+
+			ResultSet res = stat.executeQuery(query);
+
+			int count = 0;
+
+			String found = "";
+			while (res.next()) {
+				found = found + "	Medewerker " + res.getString("Code") + " uit dienst in Clever, actief in AD \n";
+				count++;
+			}
+			a.appendText("CleverNew <> Medewerker uit diesnt in Clever, actief in AD:  " + count + "\n");
+			a.appendText(found);
+
+			Layout.bRuleText6.setText(Integer.toString(count));
+
+		} catch (SQLException e) {
+			a.appendText("Er is een error gevonden is het berekenen van Business Rule 6 \n");
+			a.appendText(e.getMessage() + "\n \n");
+
+		}
 
 	}
 
-	public static void writeRule7(Connection con, TextArea a) {
+	public static void writeRule7(Connection con, TextArea a, Query q) {
+		// Business Rule 7:
+		// AD Account, onbekend in Clever
+		try {
+
+			Statement stat = conn.createStatement();
+			String query = q.getQuery7();
+
+			ResultSet res = stat.executeQuery(query);
+
+			int count = 0;
+
+			String found = "";
+			while (res.next()) {
+				found = found + "	AD Account " + res.getString("Username_Pre2000") + " onbekend in Clever \n";
+				count++;
+			}
+			a.appendText("CleverNew <> AD Account onbekend in Clever:  " + count + "\n");
+			a.appendText(found);
+
+			Layout.bRuleText7.setText(Integer.toString(count));
+
+		} catch (SQLException e) {
+			a.appendText("Er is een error gevonden is het berekenen van Business Rule 7 \n");
+			a.appendText(e.getMessage() + "\n \n");
+
+		}
 
 	}
 
-	public static void writeRule8(Connection con, TextArea a) {
+	public static void writeRule8(Connection con, TextArea a, Query q) {
+		// Business Rule 8:
+		// RDS username in profit bestaat niet in clever
+		try {
+
+			Statement stat = conn.createStatement();
+			String query = q.getQuery8();
+
+			ResultSet res = stat.executeQuery(query);
+
+			int count = 0;
+
+			String found = "";
+			while (res.next()) {
+				found = found + "	De RDS naam van " + res.getString("EmployeeUsername") + " bestaat niet in Clever \n";
+				count++;
+			}
+			a.appendText("CleverNew <> Profit RDS naam in Clever bestaat niet in Clever:  " + count + "\n");
+			a.appendText(found);
+
+			Layout.bRuleText8.setText(Integer.toString(count));
+
+		} catch (SQLException e) {
+			a.appendText("Er is een error gevonden is het berekenen van Business Rule 8 \n");
+			a.appendText(e.getMessage() + "\n \n");
+
+		}
 
 	}
 
-	public static void writeRule9(Connection con, TextArea a) {
+	public static void writeRule9(Connection con, TextArea a, Query q) {
+		// Business Rule 9:
+		// Medewerker uitdiesnst in profit, account is actief in clever
+		try {
+
+			Statement stat = conn.createStatement();
+			String query = q.getQuery9();
+
+			ResultSet res = stat.executeQuery(query);
+
+			int count = 0;
+
+			String found = "";
+			while (res.next()) {
+				found = found + "	Medewerker " + res.getString("EmployeeUsername")
+						+ " uit dienst in Profit, is actief in Clever \n";
+				count++;
+			}
+			a.appendText("CleverNew <> Proofit Medewerker uitdienst in profit, is actief in Clever:  " + count + "\n");
+			a.appendText(found);
+
+			Layout.bRuleText9.setText(Integer.toString(count));
+
+		} catch (SQLException e) {
+			a.appendText("Er is een error gevonden is het berekenen van Business Rule 9 \n");
+			a.appendText(e.getMessage() + "\n \n");
+
+		}
 
 	}
 
-	public static void writeRule10(Connection con, TextArea a) {
+	public static void writeRule10(Connection con, TextArea a, Query q) {
+		// Business Rule 10:
+		// Username in Clever bestaat niet in Afas Profit
+		try {
+
+			Statement stat = conn.createStatement();
+			String query = q.getQuery10();
+
+			ResultSet res = stat.executeQuery(query);
+
+			int count = 0;
+
+			String found = "";
+			while (res.next()) {
+				found = found + "	De RDS naam van " + res.getString("Code") + " bestaat niet in Afas Profit \n";
+				count++;
+			}
+			a.appendText("CleverNew <> Profit: username om Clever bestaat niet in Afas profit  " + count + "\n");
+			a.appendText(found);
+
+			Layout.bRuleText10.setText(Integer.toString(count));
+
+		} catch (SQLException e) {
+			a.appendText("Er is een error gevonden is het berekenen van Business Rule 10 \n");
+			a.appendText(e.getMessage() + "\n \n");
+
+		}
 
 	}
 
@@ -213,17 +385,18 @@ public class action {
 			protected Object call() throws Exception {
 
 				try {
+					Query q = new Query();
 
-					// writeRule1(conn, a);
-					// writeRule2(conn, a);
-					writeRule3(conn, a);
-					writeRule4(conn, a);
-					writeRule5(conn, a);
-					// writeRule6(conn, a);
-					// writeRule7(conn, a);
-					// writeRule8(conn, a);
-					// writeRule9(conn, a);
-					// writeRule10(conn, a);
+					writeRule1(conn, a, q);
+					writeRule2(conn, a, q);
+					writeRule3(conn, a, q);
+					writeRule4(conn, a, q);
+					writeRule5(conn, a, q);
+					writeRule6(conn, a, q);
+					writeRule7(conn, a, q);
+					writeRule8(conn, a, q);
+					writeRule9(conn, a, q);
+					writeRule10(conn, a, q);
 
 					return true;
 				} catch (NullPointerException e) {
