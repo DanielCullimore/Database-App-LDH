@@ -1,11 +1,8 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Optional;
@@ -39,7 +36,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Pair;
 import javafx.scene.paint.Color;
 
 public class Layout extends Application implements EventHandler<ActionEvent> {
@@ -82,6 +78,9 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 	Label ADLabel;
 	Label CleverLabel;
 
+    TableView<String> table;
+	
+	
 	TableView<ProfitEntry> profitTable;
 	TableView<mock> adTable;
 	TableView<mock> cleverTable;
@@ -171,8 +170,13 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		top.setSpacing(10);
 		top.setStyle(style);
 
-		// RIGHT
-		// right.setMinWidth(600);
+		
+		//CENTER
+		
+		load = new Button("Inladen Business Rules");
+		load.setMinWidth(680);
+		load.setMinHeight(100);
+//		
 
 		bRules = new Label("Business Rules");
 		rapport = new Label("Rapport");
@@ -224,54 +228,46 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 
 		rapportText = new TextArea();
 
-		GridPane.setConstraints(bRules, 0, 0, 2, 1);
-		GridPane.setConstraints(bRule1, 1, 1);
-		GridPane.setConstraints(bRuleText1, 2, 1);
-		GridPane.setConstraints(bRule2, 1, 2);
-		GridPane.setConstraints(bRuleText2, 2, 2);
-		GridPane.setConstraints(bRule3, 1, 3);
-		GridPane.setConstraints(bRuleText3, 2, 3);
-		GridPane.setConstraints(bRule4, 1, 4);
-		GridPane.setConstraints(bRuleText4, 2, 4);
-		GridPane.setConstraints(bRule5, 1, 5);
-		GridPane.setConstraints(bRuleText5, 2, 5);
-		GridPane.setConstraints(bRule6, 1, 6);
-		GridPane.setConstraints(bRuleText6, 2, 6);
-		GridPane.setConstraints(bRule7, 1, 7);
-		GridPane.setConstraints(bRuleText7, 2, 7);
-		GridPane.setConstraints(bRule8, 1, 8);
-		GridPane.setConstraints(bRuleText8, 2, 8);
-		GridPane.setConstraints(bRule9, 1, 9);
-		GridPane.setConstraints(bRuleText9, 2, 9);
-		GridPane.setConstraints(bRule10, 1, 10);
-		GridPane.setConstraints(bRuleText10, 2, 10);
-		GridPane.setConstraints(rapport, 0, 11, 2, 1);
-		GridPane.setConstraints(rapportText, 0, 12, 3, 1);
+		GridPane.setConstraints(load, 0, 0, 5, 1);
+		GridPane.setConstraints(bRules, 0, 1, 2, 1);
+		GridPane.setConstraints(bRule1, 1, 2);
+		GridPane.setConstraints(bRuleText1, 2, 2);
+		GridPane.setConstraints(bRule2, 1, 3);
+		GridPane.setConstraints(bRuleText2, 2, 3);
+		GridPane.setConstraints(bRule3, 1, 4);
+		GridPane.setConstraints(bRuleText3, 2, 4);
+		GridPane.setConstraints(bRule4, 1, 5);
+		GridPane.setConstraints(bRuleText4, 2, 5);
+		GridPane.setConstraints(bRule5, 1, 6);
+		GridPane.setConstraints(bRuleText5, 2,6);
+		GridPane.setConstraints(bRule6, 1, 7);
+		GridPane.setConstraints(bRuleText6, 2, 7);
+		GridPane.setConstraints(bRule7, 1, 8);
+		GridPane.setConstraints(bRuleText7, 2, 8);
+		GridPane.setConstraints(bRule8, 1, 9);
+		GridPane.setConstraints(bRuleText8, 2, 9);
+		GridPane.setConstraints(bRule9, 1, 10);
+		GridPane.setConstraints(bRuleText9, 2, 10);
+		GridPane.setConstraints(bRule10, 1, 11);
+		GridPane.setConstraints(bRuleText10, 2, 11);
+		GridPane.setConstraints(rapport, 0, 12, 2, 1);
+		GridPane.setConstraints(rapportText, 0, 13, 3, 1);
 
 		rapport.setPadding(new Insets(10, 0, 0, 0));
 
-		rapportText.setMinHeight(600);
+		rapportText.setMinHeight(400);
 
 		rapportText.setEditable(false);
 
-		// right.setGridLinesVisible(true);
-		right.setHgap(20);
-		right.setVgap(5);
+		center.setPadding(new Insets(25, 25, 25, 25));
+		
+		center.setHgap(20);
+		center.setVgap(10);
 
-		right.getChildren().addAll(bRules, bRule1, bRuleText1, bRule2, bRuleText2, bRule3, bRuleText3, bRule4,
+		center.getChildren().addAll(load, bRules, bRule1, bRuleText1, bRule2, bRuleText2, bRule3, bRuleText3, bRule4,
 				bRuleText4, bRule5, bRuleText5, bRule6, bRuleText6, bRule7, bRuleText7, bRule8, bRuleText8, bRule9,
 				bRuleText9, bRule10, bRuleText10, rapport, rapportText);
 
-		right.setPadding(new Insets(0, 10, 0, 10));
-
-		// Center
-		load = new Button("Inladen");
-		load.setMinWidth(300);
-		load.setMinHeight(300);
-
-		center.setPadding(new Insets(25, 25, 25, 25));
-		center.setHgap(10);
-		center.setVgap(10);
 
 		Button changeString = new Button("String");
 		changeString.setMinWidth(300);
@@ -282,6 +278,20 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		toCvs.setMinSize(300, 300);
 		GridPane.setConstraints(toCvs, 0, 1);
 		toCvs.setOnAction(e -> action.write(window, primaryStage));
+		
+		Button impact = new Button("Impact laden");
+		impact.setMinWidth(680);
+		impact.setMinHeight(100);
+		GridPane.setConstraints(impact, 7, 0, 5, 1);
+		
+		
+//		TableColumn<String, Int> nameColumn = new TableColumn<>("Name");
+		
+		
+	    table = new TableView<>();
+		
+		center.getChildren().addAll(impact);
+		
 		
 		
 
@@ -334,7 +344,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 
 		// Optional<String> result = dialog.showAndWait();
 
-		center.getChildren().addAll(load, changeString, toCvs);
+//		center.getChildren().addAll(load, changeString, toCvs);
 
 		load.setOnAction(e -> action.writeRules(rapportText, window, primaryStage));
 
