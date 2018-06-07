@@ -37,8 +37,8 @@ public class main {
 		statusProgram = "Running";
 		singleUserStatus = connDb.singleUserConnection();
 
+		try {
 		if (statusProgram.equals("Running")) {
-
 			if (singleUserStatus.equals("Access Granted")) {
 
 				conn = connDb.getConnection();
@@ -52,7 +52,9 @@ public class main {
 		} else if (statusProgram.equals("Access Deny")) {
 			System.out.println("Could not start program, try again later");
 		}
-
+		} catch(NullPointerException e) {
+			action.errorString(args);
+		}
 	}
 
 	public static void launchProgram(String[] args) {

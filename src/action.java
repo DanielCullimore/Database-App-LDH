@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.sql.*;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -16,7 +18,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
@@ -73,6 +77,7 @@ public class action {
 		});
 
 		rule1Thread.start();
+		Layout.impact.setDisable(false);
 		// try {
 		// rule1Thread.join();
 		// } catch (InterruptedException e) {
@@ -81,6 +86,125 @@ public class action {
 		// }
 
 	}
+	
+	public static void changeString(Dialog<String> dialog) throws IOException {
+
+		Optional<String> s = dialog.showAndWait();
+		PrintWriter pw = null;
+
+		try {
+			pw = new PrintWriter("src/connection.txt");
+			BufferedWriter bw = new BufferedWriter(pw);
+
+			try {
+				bw.write(s.get());
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Connection String aangepast");
+				alert.setHeaderText(null);
+				alert.setContentText("De connection String is aangepast. \n Start het programma opniew op.");
+				alert.initOwner(Layout.window);
+				
+				alert.showAndWait();
+
+
+			} catch (NoSuchElementException e) {
+
+			} finally {
+				bw.flush();
+				bw.close();
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			pw.close();
+
+		} 
+	}
+
+	public static void write(Window window, Stage primaryStage) {
+
+		conn = main.conn;
+
+		Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+		dialog.setHeaderText(null);
+		dialog.setGraphic(null);
+		dialog.initOwner(primaryStage);
+
+		dialog.setTitle("Schrijven");
+
+		dialog.initStyle(StageStyle.UTILITY);
+
+		StackPane done = new StackPane();
+		Label t = new Label("Het overschrijven was succesvol");
+		done.getChildren().add(t);
+
+		dialog.getDialogPane().setContent(done);
+		cvsWriter.write(primaryStage);
+
+		dialog.showAndWait();
+
+	}
+
+	public static void setImpactTable() {
+		conn = main.conn;
+		ObservableList<Gebruiker> g = FXCollections.observableArrayList();
+
+		Statement stat;
+		try {
+			stat = conn.createStatement();
+
+			String q = "SELECT PC.Code, PC.PersoonID, count(A.GewijzigdDoor) as aantal_Activiteit "
+					+ "  FROM [AuditBlackBox].[dbo].[Activiteit] A "
+					+ "  join Persoon P on P.MedewerkerID = A.GewijzigdDoor "
+					+ "  join PersoonCodes PC on PC.PersoonID = P.ID "
+					+ "  join [AfasProfit-Export] AP on AP.EmployeeUsername = PC.Code "
+					+ "  where AP.ContractEndDate < GETDATE() AND AP.EmployerName = '" + main.q.werkeenheidADExport
+					+ "' group by PC.Code, PC.PersoonID";
+
+			ResultSet res = stat.executeQuery(q);
+
+			while (res.next()) {
+				Gebruiker newGebruiker = new Gebruiker(res.getString("Code"), res.getString("PersoonID"),
+						res.getString("aantal_Activiteit"));
+				g.add(newGebruiker);
+				System.out.println("test");
+			}
+
+			Layout.impactTable.setItems(g);
+			Layout.toCvs.setDisable(false);
+			Layout.sDatabase.setDisable(false);
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public static void setEenheden(Query q) {
+		q.setEenheid();
+	}
+
+	public static Object writeSDatabase() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static void closeProgram() {
+		try {
+			java.sql.Statement stat = main.conn.createStatement();
+			String query = "DROP TABLE LoginInfo;";
+			stat.execute(query);
+			main.conn.close();
+
+			Layout.window.close();
+
+			System.out.println("Programma afgesloten, en connectie uit");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}	
 
 	public static void writeRule1(Connection con, TextArea a, Query q) {
 		// Business Rule 1:
@@ -407,93 +531,7 @@ public class action {
 		};
 	}
 
-	public static void changeString(Dialog<String> dialog) throws IOException {
-
-		Optional<String> s = dialog.showAndWait();
-		PrintWriter pw = null;
-
-		try {
-			pw = new PrintWriter("src/connection.txt");
-			BufferedWriter bw = new BufferedWriter(pw);
-
-			try {
-				bw.write(s.get());
-
-			} catch (NoSuchElementException e) {
-
-			} finally {
-				bw.flush();
-				bw.close();
-			}
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			pw.close();
-
-		} finally {
-
-		}
-
-	}
-
-	public static void write(Window window, Stage primaryStage) {
-
-		conn = main.conn;
-
-		Alert dialog = new Alert(Alert.AlertType.INFORMATION);
-		dialog.setHeaderText(null);
-		dialog.setGraphic(null);
-		dialog.initOwner(primaryStage);
-
-		dialog.setTitle("Schrijven");
-
-		dialog.initStyle(StageStyle.UTILITY);
-
-		StackPane done = new StackPane();
-		Label t = new Label("Het overschrijven was succesvol");
-		done.getChildren().add(t);
-
-		dialog.getDialogPane().setContent(done);
-		cvsWriter.write(primaryStage);
-
-		dialog.showAndWait();
-
-	}
-
-	public static void setImpactTable() {
-		conn = main.conn;
-		ObservableList<Gebruiker> g = FXCollections.observableArrayList();
-
-		Statement stat;
-		try {
-			stat = conn.createStatement();
-
-			String q = "SELECT PC.Code, PC.PersoonID, count(A.GewijzigdDoor) as aantal_Activiteit "
-					+ "  FROM [AuditBlackBox].[dbo].[Activiteit] A "
-					+ "  join Persoon P on P.MedewerkerID = A.GewijzigdDoor "
-					+ "  join PersoonCodes PC on PC.PersoonID = P.ID "
-					+ "  join [AfasProfit-Export] AP on AP.EmployeeUsername = PC.Code "
-					+ "  where AP.ContractEndDate < GETDATE() AND AP.EmployerName = '" + main.q.werkeenheidADExport +  "' group by PC.Code, PC.PersoonID";
-
-			ResultSet res = stat.executeQuery(q);
-
-			while (res.next()) {
-				Gebruiker newGebruiker = new Gebruiker(res.getString("Code"), res.getString("PersoonID"),
-						res.getString("aantal_Activiteit"));
-				g.add(newGebruiker);
-				System.out.println("test");
-			}
-
-			Layout.impactTable.setItems(g);
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
-	public static void setEenheden(Query q) {
-		q.setEenheid();
+	public static void errorString(String[] args) {
+		ErrorString.launch(ErrorString.class, args);		
 	}
 }

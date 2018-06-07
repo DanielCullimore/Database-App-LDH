@@ -3,12 +3,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.SQLException;
-import java.util.Date;
 import java.util.Optional;
-
-import DataEntries.*;
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -21,7 +16,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -34,74 +28,43 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
 
 public class Layout extends Application implements EventHandler<ActionEvent> {
-
-	// Login
-	Scene login;
-	Image logo;
-	ImageView legerIcon;
-	Label loginText;
-	TextField loginName;
-	Button closeButton;
-	GridPane loginScreen;
-
 	// Checker
-	Scene checker;
-	BorderPane layout;
-	HBox top;
-	GridPane right;
-	GridPane center;
-
-	Button button;
+	static Scene checker;
+	static BorderPane layout;
+	static HBox top;
+	static VBox right;
+	static GridPane center;
 	static Stage window;
 
 	// TOP Bar
-	Label welkom;
-	Label team;
-	Button logOut;
+	static Image logo;
+	static ImageView legerIcon;
+	static Label welkom;
+	static Label team;
+	static Button closeButton;
 	static String name = "Michiel";
-	static String eenheid = "Programmer";
+	static String eenheid;
 
-	Button loadAD;
-	Button loadProfit;
-	Button loadClever;
-	Button createReport;
-	Button reset;
-	Button email;
-	Button runAll;
-	TextField loadedAD;
-	TextField loadedProfit;
-	TextField loadedClever;
-	Label profitLabel;
-	Label ADLabel;
-	Label CleverLabel;
-
-	TableView<String> table;
-
-	TableView<ProfitEntry> profitTable;
-	TableView<mock> adTable;
-	TableView<mock> cleverTable;
-	TableColumn<ProfitEntry, String> nameColumn;
-	TableColumn<ProfitEntry, Date> StartContract;
-	TableColumn<ProfitEntry, Date> EndContract;
-
-	// Right Rules bar
-	Label bRules;
-	Label bRule1;
-	Label bRule2;
-	Label bRule3;
-	Label bRule4;
-	Label bRule5;
-	Label bRule6;
-	Label bRule7;
-	Label bRule8;
-	Label bRule9;
-	Label bRule10;
+	// Center
+	static Button load;
+	static Label bRules;
+	static Label bRule1;
+	static Label bRule2;
+	static Label bRule3;
+	static Label bRule4;
+	static Label bRule5;
+	static Label bRule6;
+	static Label bRule7;
+	static Label bRule8;
+	static Label bRule9;
+	static Label bRule10;
 	static TextField bRuleText1;
 	static TextField bRuleText2;
 	static TextField bRuleText3;
@@ -112,19 +75,21 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 	static TextField bRuleText8;
 	static TextField bRuleText9;
 	static TextField bRuleText10;
-
 	static Optional<String> s;
-
-	Label rapport;
-	TextArea rapportText;
+	static Label rapport;
+	static TextArea rapportText;
 
 	// Impact
 	static TableView<Gebruiker> impactTable;
+	static Button impact;
 
-	// center
-	static Button load;
-	static ProgressBar ProgBar;
+	// Right
+	static Button toCvs;
+	static Button changeString;
+	static Button sDatabase;
+	static Dialog<String> dialog;
 
+	@SuppressWarnings({ "unchecked", "resource" })
 	@Override
 	public void start(Stage primaryStage) {
 		window = primaryStage;
@@ -136,7 +101,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 
 		top = new HBox();
 		center = new GridPane();
-		right = new GridPane();
+		right = new VBox();
 
 		// TOP
 		logo = new Image("/legerIcon.png");
@@ -153,7 +118,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		team.setTextFill(Color.WHITE);
 
 		closeButton = new Button("Afsluiten");
-		closeButton.setOnAction(e -> closeProgram());
+		closeButton.setOnAction(e -> action.closeProgram());
 		closeButton.setMinWidth(100);
 		closeButton.setMinHeight(50);
 		closeButton.setFont(new Font(25));
@@ -173,12 +138,11 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		top.setSpacing(10);
 		top.setStyle(style);
 
-		// CENTER
-
+		// CENTER - BusinessRules
 		load = new Button("Inladen Business Rules");
-		load.setMinWidth(680);
-		load.setMinHeight(100);
-		//
+		load.setMinSize(600, 100);
+		load.setFont(new Font(30));
+		load.setOnAction(e -> action.writeRules(rapportText, window, primaryStage));
 
 		bRules = new Label("Business Rules");
 		rapport = new Label("Rapport");
@@ -257,13 +221,9 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		GridPane.setConstraints(rapportText, 0, 13, 3, 1);
 
 		rapport.setPadding(new Insets(10, 0, 0, 0));
-
 		rapportText.setMinHeight(400);
-
 		rapportText.setEditable(false);
-
 		center.setPadding(new Insets(25, 25, 25, 25));
-
 		center.setHgap(20);
 		center.setVgap(10);
 
@@ -271,22 +231,12 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 				bRuleText4, bRule5, bRuleText5, bRule6, bRuleText6, bRule7, bRuleText7, bRule8, bRuleText8, bRule9,
 				bRuleText9, bRule10, bRuleText10, rapport, rapportText);
 
-		Button changeString = new Button("String");
-		changeString.setMinWidth(300);
-		changeString.setMinHeight(300);
-		GridPane.setConstraints(changeString, 13, 7, 1, 7);
-
-//		center.setGridLinesVisible(true);
-
-		Button toCvs = new Button("Write");
-		toCvs.setMinSize(300, 300);
-		GridPane.setConstraints(toCvs, 13, 0, 1, 7);
-		toCvs.setOnAction(e -> action.write(window, primaryStage));
-
-		Button impact = new Button("Impact laden");
+		// Center Impact
+		impact = new Button("Impact laden");
+		impact.setFont(new Font(30));
 		impact.setOnAction(e -> action.setImpactTable());
-		impact.setMinWidth(680);
-		impact.setMinHeight(100);
+		impact.setMinSize(600, 100);
+		impact.setDisable(true);
 		GridPane.setConstraints(impact, 7, 0, 5, 1);
 
 		TableColumn<Gebruiker, String> usernameCol = new TableColumn<>("Gebruikersnaam");
@@ -302,28 +252,50 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		numberCol.setCellValueFactory(new PropertyValueFactory<>("aantalOvertredingen"));
 
 		impactTable = new TableView<>();
-		// impactTable.setMinHeight(500);
 		impactTable.getColumns().addAll(usernameCol, idCol, numberCol);
 
 		GridPane.setConstraints(impactTable, 7, 2, 5, 12);
 
 		center.getChildren().addAll(impact, impactTable);
 
-		Dialog<String> dialog = new Dialog<>();
-		dialog.setTitle("Aanpassen van de Connection String");
-		ButtonType urlSet = new ButtonType("Pas Aan", ButtonData.OK_DONE);
-		dialog.getDialogPane().getButtonTypes().addAll(urlSet, ButtonType.CANCEL);
+		// Right VBox
 
-		dialog.initStyle(StageStyle.UTILITY);
+		right.setPadding(new Insets(10));
+		right.setSpacing(20);
+
+		toCvs = new Button("Schrijf de Business Rules naar bestand");
+		toCvs.setFont(new Font(25));
+		toCvs.setWrapText(true);
+		toCvs.setMinSize(550, 300);
+		toCvs.setOnAction(e -> action.write(window, primaryStage));
+		toCvs.setDisable(true);
+
+		changeString = new Button("Aanpassen van de Connection String");
+		changeString.setFont(new Font(25));
+		changeString.setWrapText(true);
+		changeString.setMinSize(550, 300);
+
+		sDatabase = new Button("Schrijf weg naar Signalen Database");
+		sDatabase.setFont(new Font(25));
+		sDatabase.setWrapText(true);
+		sDatabase.setMinSize(550, 300);
+		sDatabase.setOnAction(e -> action.writeSDatabase());
+		sDatabase.setDisable(true);
 
 		changeString.setOnAction(e -> {
 			try {
 				action.changeString(dialog);
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		});
+
+		// Change String Dialogue
+		dialog = new Dialog<>();
+		dialog.setTitle("Aanpassen van de Connection String");
+		ButtonType urlSet = new ButtonType("Pas Aan", ButtonData.OK_DONE);
+		dialog.getDialogPane().getButtonTypes().addAll(urlSet, ButtonType.CANCEL);
+		dialog.initStyle(StageStyle.UTILITY);
 
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
@@ -356,12 +328,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 			return null;
 		});
 
-		// Optional<String> result = dialog.showAndWait();
-
-		// center.getChildren().addAll(load, changeString, toCvs);
-		center.getChildren().addAll(toCvs, changeString);
-
-		load.setOnAction(e -> action.writeRules(rapportText, window, primaryStage));
+		right.getChildren().addAll(toCvs, changeString, sDatabase);
 
 		layout.setRight(right);
 		layout.setTop(top);
@@ -372,38 +339,15 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		dialog.initOwner(primaryStage);
 
 		window.setFullScreen(true);
-
-		window.setOnCloseRequest(e -> closeProgram());
-
+		window.setOnCloseRequest(e -> action.closeProgram());
 		primaryStage.setResizable(false);
 
 	}
 
-	public void loggedIn() {
-		window.setScene(checker);
-		window.setFullScreen(true);
-	}
-
-	public static void closeProgram() {
-		try {
-			java.sql.Statement stat = main.conn.createStatement();
-			String query = "DROP TABLE LoginInfo;";
-			stat.execute(query);
-			main.conn.close();
-
-			window.close();
-
-			System.out.println("Programma afgesloten, en connectie uit");
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
 	@Override
-	public void handle(ActionEvent arg0) {
+	public void handle(ActionEvent event) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 }
