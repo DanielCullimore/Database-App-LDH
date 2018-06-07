@@ -9,22 +9,25 @@ package ldh.coffie.pkg723;
  * @author Daniel Mensche
  **/
 // Import connection classes
+import java.io.File;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.net.InetAddress;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 
 public class ConnectionDatabase {
     private static String url = "jdbc:sqlserver://localhost:1433;integratedSecurity=true;databasename=AuditBlackBox";   
-   // private static String username = "TestDB";   
-   // private static String password = "1234567";
     private static Connection conn;
     
-    private static String signalUrl = "jdbc:sqlserver://localhost:1433;databaseName=TestConnectionDatabase";    
-    private static String signalUsername = "TestDB";   
-    private static String signalPassword = "1234567";
+    private static String signalUrl = "jdbc:sqlserver://localhost:1433;integratedSecurity=true; databaseName=TestConnectionDatabase"; 
     private static Connection signalConn;
     
     private static String singleUserLock;
@@ -32,9 +35,10 @@ public class ConnectionDatabase {
     public ConnectionDatabase(){
     }
    
-    public static Connection getConnection() throws ClassNotFoundException {
+    public static Connection getConnection() throws ClassNotFoundException, IOException {
     try{
-        
+    
+       
       Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
       conn = DriverManager.getConnection(url);
       System.out.println("Verbinding gemaakt");
@@ -62,9 +66,10 @@ public class ConnectionDatabase {
                }
   }
     
-  public String singleUserConnection(){
+  public String singleUserConnection() throws IOException{
     try{
-        signalConn = DriverManager.getConnection(signalUrl,signalUsername,signalPassword);
+       locateFileInFolder();
+        signalConn = DriverManager.getConnection(signalUrl);
         System.out.println("Verbinding gemaakt Signaal");
          
         DatabaseMetaData dbm = signalConn.getMetaData();
@@ -89,4 +94,22 @@ public class ConnectionDatabase {
     
     return singleUserLock;
 }  
+ 
+ private static void locateFileInFolder(){
+
+   //  System.out.println(arguments);
+     
+     File f = new File("scr//file//sqljdbc_auth.dll");
+     String f2=f.getAbsolutePath();
+     System.out.println("Path:"+f2);
+     
+     System.setProperty("java.library.path", f2);
+     
+     List<String> arguments;
+     RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
+     System.out.println(""+runtimeMxBean.getInputArguments());
+ }
+  
+ 
+
 }
