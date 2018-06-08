@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javafx.scene.control.Dialog;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -39,31 +40,25 @@ public class cvsWriter {
         fileChooser.getExtensionFilters().add(extFilter);
         
         //Show save file dialog
-        File file = fileChooser.showSaveDialog(primaryStage);
-   		
+        File file = fileChooser.showSaveDialog(primaryStage);   		
 
-		try {
-			String connectionString = "jdbc:sqlserver://localhost:1433;databaseName=AuditBlackBox";
-			Connection conn = DriverManager.getConnection(connectionString, "testAccount1", "Welkom01!");
-			System.out.println("verbinding gemaakt...");
+		Connection conn = main.conn;
+		System.out.println("verbinding gemaakt...");
 
-			Query q = new Query();
-			q.setEenheid();
-			
-			writeQ1ToCsv(conn, file, filePath, q);
-			writeQ2ToCsv(conn, file, filePath, q);
-			writeQ3ToCsv(conn, file, filePath, q);
-			writeQ4ToCsv(conn, file, filePath, q);
-			writeQ5ToCsv(conn, file, filePath, q);
-			writeQ6ToCsv(conn, file, filePath, q);
-			writeQ7ToCsv(conn, file, filePath, q);
-			writeQ8ToCsv(conn, file, filePath, q);
-			writeQ9ToCsv(conn, file, filePath, q);
-			writeQ10ToCsv(conn, file, filePath, q);
+		Query q = new Query();
+		q.setEenheid();
+		
+		writeQ1ToCsv(conn, file, filePath, q);
+		writeQ2ToCsv(conn, file, filePath, q);
+		writeQ3ToCsv(conn, file, filePath, q);
+		writeQ4ToCsv(conn, file, filePath, q);
+		writeQ5ToCsv(conn, file, filePath, q);
+		writeQ6ToCsv(conn, file, filePath, q);
+		writeQ7ToCsv(conn, file, filePath, q);
+		writeQ8ToCsv(conn, file, filePath, q);
+		writeQ9ToCsv(conn, file, filePath, q);
+		writeQ10ToCsv(conn, file, filePath, q);
 
-		} catch (SQLException E) {
-			System.out.println("Foutmelding: " + E.getMessage());
-		}
 	}
 
 	public static void writeQ1ToCsv(Connection conn, File export, String filePath, Query q) {

@@ -122,23 +122,7 @@ public class action {
 
 		conn = main.conn;
 
-		Alert dialog = new Alert(Alert.AlertType.INFORMATION);
-		dialog.setHeaderText(null);
-		dialog.setGraphic(null);
-		dialog.initOwner(primaryStage);
-
-		dialog.setTitle("Schrijven");
-
-		dialog.initStyle(StageStyle.UTILITY);
-
-		StackPane done = new StackPane();
-		Label t = new Label("Het overschrijven was succesvol");
-		done.getChildren().add(t);
-
-		dialog.getDialogPane().setContent(done);
 		cvsWriter.write(primaryStage);
-
-		dialog.showAndWait();
 
 	}
 
