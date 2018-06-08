@@ -5,8 +5,6 @@ import java.io.PrintWriter;
 import java.sql.*;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -18,7 +16,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
@@ -145,7 +142,7 @@ public class action {
 
 	}
 
-	public static void setImpactTable() {
+	public static void setImpactTable(Stage primaryStage) {
 		conn = main.conn;
 		ObservableList<Gebruiker> g = FXCollections.observableArrayList();
 
@@ -173,6 +170,16 @@ public class action {
 			Layout.impactTable.setItems(g);
 			Layout.toCvs.setDisable(false);
 			Layout.sDatabase.setDisable(false);
+			
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Impact geladen");
+			alert.setHeaderText(null);
+			alert.setContentText("De Impact is geladen en in de tabel neergezet.");
+			alert.initOwner(primaryStage);
+			alert.showAndWait();
+			
+			
+			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -185,9 +192,8 @@ public class action {
 		q.setEenheid();
 	}
 
-	public static Object writeSDatabase() {
-		// TODO Auto-generated method stub
-		return null;
+	public static void writeSDatabase(Stage ps) {
+		Signaaldatabase.start(ps);
 	}
 
 	public static void closeProgram() {

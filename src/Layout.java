@@ -53,8 +53,8 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 	static Label welkom;
 	static Label team;
 	static Button closeButton;
-	static String name = "Michiel";
-	static String eenheid;
+	static String name = System.getProperty("user.name");
+	static String eenheid = main.q.werkeenheidProfit;
 
 	// Center met Rules
 	static Button load;
@@ -238,7 +238,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		// Center Impact
 		impact = new Button("Impact laden");
 		impact.setFont(new Font(30));
-		impact.setOnAction(e -> action.setImpactTable());
+		impact.setOnAction(e -> action.setImpactTable(primaryStage));
 		impact.setMinSize(600, 100);
 		impact.setDisable(true);
 		GridPane.setConstraints(impact, 7, 0, 5, 1);
@@ -283,7 +283,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		sDatabase.setFont(new Font(25));
 		sDatabase.setWrapText(true);
 		sDatabase.setMinSize(550, 300);
-		sDatabase.setOnAction(e -> action.writeSDatabase());
+		sDatabase.setOnAction(e -> action.writeSDatabase(primaryStage));
 		sDatabase.setDisable(true);
 
 		changeString.setOnAction(e -> {
@@ -342,6 +342,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		window.show();
 		dialog.initOwner(primaryStage);
 
+		primaryStage.getIcons().add(logo);
 		window.setFullScreen(true);
 		window.setOnCloseRequest(e -> action.closeProgram());
 		primaryStage.setResizable(false);
