@@ -23,7 +23,6 @@ public class main {
 
 	static ConnectionDatabase connDb;
 	static Connection conn;
-	static MultiAccessRestriction access;
 	static String statusProgram;
 	static String singleUserStatus;
 	static Query q;
@@ -33,7 +32,6 @@ public class main {
 		
 		q = new Query();	
 		connDb = new ConnectionDatabase();
-		access = new MultiAccessRestriction();
 		statusProgram = "Running";
 		singleUserStatus = connDb.singleUserConnection();
 

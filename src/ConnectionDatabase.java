@@ -6,6 +6,7 @@
 
 /**
  * @author Daniel Mensche
+ * Deze class zet de connetion van de database op een manier zodat je niet twee keer tegelijkertijd kan inloggen
  **/
 // Import connection classes
 import java.io.BufferedReader;
@@ -28,6 +29,7 @@ public class ConnectionDatabase {
 
 	private static String singleUserLock;
 
+        //Maak verbinding met database met de string uit het bestand connection.txt
 	public ConnectionDatabase() throws IOException {
                 String f = ConnectionDatabase.class.getResource("connection.txt").getPath();
 		InputStream is = new FileInputStream(f);
@@ -36,6 +38,8 @@ public class ConnectionDatabase {
 
 	}
 
+      
+        
 	public Connection getConnection() {
 		try {
 
@@ -48,6 +52,7 @@ public class ConnectionDatabase {
 		return conn;
 	}
 
+        //Wanner de connetion wordt gesloten, wordtd ook de tabel LoginInfo verwijderd
 	public void closeConnection(Connection mConn) throws SQLException {
 
 		try {
@@ -64,6 +69,7 @@ public class ConnectionDatabase {
 		}
 	}
 
+        //De check wordt gemaakt door te kijken of de tabel LoginInfo al bestaat, als dat zo is, wordt de connectie hier gestopt.
 	public String singleUserConnection() {
 		try {
 			conn = DriverManager.getConnection(url, username, password);

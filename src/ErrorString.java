@@ -24,6 +24,11 @@ import javafx.stage.StageStyle;
 
 public class ErrorString extends Application {
 
+    /*
+    Author: Michiel Maas
+    Deze Class handelt de sitautei als de connectionstring geen ogede verbinding geeft
+    */
+    
 
     public static void main(String[] args) {
         launch(args);
@@ -31,6 +36,8 @@ public class ErrorString extends Application {
 
     @SuppressWarnings("resource")
 	@Override
+    
+    //Er wordt een scherm geopend dat de vraagt op de stirng opnieuw in te voeren
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Foute String");
 		Image logo = new Image("/legerIcon.png");

@@ -23,7 +23,8 @@ import javafx.stage.StageStyle;
 
 /**
  *
- * @author dc_19
+ * @author Daniel Cullimore en Michiel Maas
+ * Deze Class heeft alle queries die worden gebruikt om over te schrijven naar de Signaal Database
  */
 public class Signaaldatabase {
 	Statement stObj;
@@ -94,7 +95,7 @@ public class Signaaldatabase {
 		return query1 + query2 + query3;
 	}
 
-	// “RDS naam in Clevernew is niet ingevuld;”
+	// ï¿½RDS naam in Clevernew is niet ingevuld;ï¿½
 	public String insertData3() {
 		String query1 = "INSERT INTO [SignaalDatabase].[dbo].Afwijking (Ba_account, tekstmelding) "
 				+ "SELECT DISTINCT PC.Code, 'RDS naam in Clevernew is niet ingevuld' "
@@ -154,7 +155,7 @@ public class Signaaldatabase {
 		return query1 + query2 + query3;
 	}
 
-	// “Medewerker uit dienst in CleverNew, account in AD actief”
+	// ï¿½Medewerker uit dienst in CleverNew, account in AD actiefï¿½
 	public String insertData5() {
 		String query1 = "INSERT INTO [SignaalDatabase].[dbo].Afwijking(Ba_account, tekstmelding) "
 				+ "SELECT PC.Code, 'Medewerker uit dienst in CleverNew account in AD actief' "
@@ -297,6 +298,7 @@ public class Signaaldatabase {
 		return query1 + query2 + query3;
 	}
 
+        //Leeg maken van de Database
 	public String emptyDB() {
 		String delete2 = "DELETE FROM afwijking ";
 		String delete3 = "DELETE FROM Impact ";
@@ -304,6 +306,9 @@ public class Signaaldatabase {
 		return delete2 + delete3 + delete1;
 	}
 
+        
+        //Omdat het overschrijven zo lang duurt wordt er een laadscherm getoond met een THread
+        //
 	public static void start(Stage primaryStage) {
 
 		try {
@@ -361,6 +366,7 @@ public class Signaaldatabase {
 		}
 	}
 
+        //Deze methode is de Thread die wordt gebruikt bij het overschrijven
 	public static Task<?> createWriter(Connection conn) {
 		return new Task<Object>() {
 			@Override

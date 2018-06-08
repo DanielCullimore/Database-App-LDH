@@ -26,8 +26,7 @@ import javafx.stage.Stage;
 public class cvsWriter {
 
 	/**
-	 * @param args
-	 *            the command line arguments
+	 *In deze methode wordt het bestand gekozen war naaro wordt geschrevne, en waar die op te slaan, en worden alle losse schrijf methodes aangeschreven
 	 */
 	public static void write(Stage primaryStage) {		
 		String filePath = ".\\Desktop\\export.txt";
@@ -60,6 +59,10 @@ public class cvsWriter {
 
 	}
 
+        /*
+        Hier onder staan 10 methodes voor elke business rules, en hun eigen syntax, en hoe ze moeten worden overgeschreven naar een los bestand
+        */
+        
 	public static void writeQ1ToCsv(Connection conn, File export, String filePath, Query q) {
 
 		String found;

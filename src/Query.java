@@ -11,7 +11,8 @@ import java.util.ArrayList;
 
 /**
  *
- * @author megas
+ * @author Aaron van Leeuwen en Michiel Maas
+ * Deze class handelt de grote queryies die worden gebruikt voor business rules.
  */
 public class Query {
 
@@ -169,6 +170,7 @@ public class Query {
 		query10 = query10 + " AND o.Naam = '" + add + "'";
 	}
 
+        //Deze methode zet de eenheid van de gebruiker, en past alle Queries zodanig aan
 	public void setEenheid() {
 		try {
 			Statement stat = main.conn.createStatement();

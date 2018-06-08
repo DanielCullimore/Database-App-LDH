@@ -7,6 +7,7 @@
 /**
  *
  * @author Rowan
+ * Dit is een Class van de Gebruiekr, deze wordt gebruikt om de gevens in de Tabel van de impact te laten zien
  */
 public class Gebruiker {
     private String username;

@@ -54,7 +54,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 	static Label team;
 	static Button closeButton;
 	static String name = System.getProperty("user.name");
-	static String eenheid = main.q.werkeenheidProfit;
+	static String eenheid;
 
 	// Center met Rules
 	static Button load;
@@ -117,6 +117,13 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		welkom.setFont(new Font(25));
 		welkom.setTextFill(Color.WHITE);
 
+                if (main.q.werkeenheidProfit.equals("")){
+                    eenheid = "Admin";
+                }else{
+                    eenheid = main.q.werkeenheidProfit;
+                }
+                
+                
 		team = new Label("Eenheid: " + eenheid);
 		team.setFont(new Font(25));
 		team.setTextFill(Color.WHITE);
@@ -271,7 +278,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		toCvs.setFont(new Font(25));
 		toCvs.setWrapText(true);
 		toCvs.setMinSize(550, 300);
-		toCvs.setOnAction(e -> action.write(window, primaryStage));
+		toCvs.setOnAction(e -> action.write(primaryStage));
 		toCvs.setDisable(true);
 
 		changeString = new Button("Aanpassen van de Connection String");
