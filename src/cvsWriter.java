@@ -31,7 +31,6 @@ public class cvsWriter {
 	 */
 	public static void write(Stage primaryStage) {		
 		String filePath = ".\\Desktop\\export.txt";
-		File export = new File(filePath);
 		
         FileChooser fileChooser = new FileChooser();
         

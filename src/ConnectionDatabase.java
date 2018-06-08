@@ -29,7 +29,8 @@ public class ConnectionDatabase {
 	private static String singleUserLock;
 
 	public ConnectionDatabase() throws IOException {
-		InputStream is = new FileInputStream("src/connection.txt");
+                String f = ConnectionDatabase.class.getResource("connection.txt").getPath();
+		InputStream is = new FileInputStream(f);
 		BufferedReader buf = new BufferedReader(new InputStreamReader(is));
 		this.url = buf.readLine();
 

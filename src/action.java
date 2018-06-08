@@ -133,8 +133,13 @@ public class action {
 		Statement stat;
 		try {
 			stat = conn.createStatement();
-
-			String q = "SELECT PC.Code, PC.PersoonID, count(A.GewijzigdDoor) as aantal_Activiteit "
+                        String q = "";
+                        
+                        
+                        if (main.q.werkeenheidProfit != ""){
+                            System.out.println(main.q.werkeenheidProfit + " Wat dit i");
+                        
+			q = "SELECT PC.Code, PC.PersoonID, count(A.GewijzigdDoor) as aantal_Activiteit "
 					+ "  FROM [AuditBlackBox].[dbo].[Activiteit] A "
 					+ "  join Persoon P on P.MedewerkerID = A.GewijzigdDoor "
 					+ "  join PersoonCodes PC on PC.PersoonID = P.ID "
@@ -142,6 +147,18 @@ public class action {
 					+ "  where AP.ContractEndDate < GETDATE() AND AP.EmployerName = '" + main.q.werkeenheidProfit + "'"
 					+ " group by PC.Code, PC.PersoonID";
 
+                        } else{
+                            q = "SELECT PC.Code, PC.PersoonID, count(A.GewijzigdDoor) as aantal_Activiteit "
+					+ "  FROM [AuditBlackBox].[dbo].[Activiteit] A "
+					+ "  join Persoon P on P.MedewerkerID = A.GewijzigdDoor "
+					+ "  join PersoonCodes PC on PC.PersoonID = P.ID "
+					+ "  join [AfasProfit-Export] AP on AP.EmployeeUsername = PC.Code "
+					+ "  where AP.ContractEndDate < GETDATE() " 
+					+ " group by PC.Code, PC.PersoonID";
+
+                        }
+                        
+                        
 			ResultSet res = stat.executeQuery(q);
 
 			while (res.next()) {
