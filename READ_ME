@@ -1,0 +1,28 @@
+Read Me:
+
+Dit is het project van groepje 3C. 
+
+	Rowan  Merkel
+	Aron van Leeuwen
+	Daniel Mensche
+	Daniel Cullimore
+	Michiel Maas
+
+Aantekenigen:
+	Java 8:
+		Dit project is geschreven en Java 8. Vergeet de JDK niet om te zetten hin de project properties.
+
+	Database Gebruiker:
+		Er wordt gebruiker gemaakt van een gebruiker van de database wanneer er wordt ingelogd. Deze staat in de ConnectionDatabase.java Class
+
+	Impact:
+		De Query voor de Impact Database is incompleet. We hadden de opdracht verkeerd begrepen, en daardoor ook verkeerd uitgevoerd. Onze excuses hiervoor. 
+
+	Laadscherm en printing:
+		Het laadscherm dat opkomt wanneer je de Business Rules aanlaat kan er voor zorgen dat sommige waardes niet mooi worden geprint in de bijbehorende text velden. Wanneer u opnieuw laadt, of op de textvelden klinkt zal dit het moeten verhelpen
+
+	Connection String
+		In de applicatie is er mogelijkheid om de connection string aan te passen. Wanneer de connection String incorrect is, en je het programma opnieuw opstart wordt je door gestruurd naar een nieuw scherm om de connection string nog een keer in te vullen.
+
+	Admin Settings
+		Het proogramma kijkt naar de systeem user, en logt het programma aan de hand daarvan in op de Database. Alleen de gegevens van de beijbehoorende eennheid worden getoond. Als je wil inloggen als admin en alles wil zien, commente dan de regel 61 uit main (action.setEenheden(q);)
