@@ -87,7 +87,8 @@ public class action {
 		PrintWriter pw = null;
 
 		try {
-			pw = new PrintWriter("src/connection.txt");
+                        String f = ConnectionDatabase.class.getResource("connection.txt").getPath();
+			pw = new PrintWriter(f);
 			BufferedWriter bw = new BufferedWriter(pw);
 
 			try {
