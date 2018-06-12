@@ -10,14 +10,16 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  *
@@ -25,27 +27,30 @@ import javafx.stage.Stage;
  */
 public class cvsWriter {
 
+	static Alert dialog;
+
 	/**
-	 *In deze methode wordt het bestand gekozen war naaro wordt geschrevne, en waar die op te slaan, en worden alle losse schrijf methodes aangeschreven
+	 * In deze methode wordt het bestand gekozen war naaro wordt geschrevne, en waar
+	 * die op te slaan, en worden alle losse schrijf methodes aangeschreven
 	 */
-	public static void write(Stage primaryStage) {		
+	public static void write(Stage primaryStage) {
 		String filePath = ".\\Desktop\\export.txt";
-		
-        FileChooser fileChooser = new FileChooser();
-        
-        //Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
-        fileChooser.getExtensionFilters().add(extFilter);
-        
-        //Show save file dialog
-        File file = fileChooser.showSaveDialog(primaryStage);   		
+
+		FileChooser fileChooser = new FileChooser();
+
+		// Set extension filter
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+		fileChooser.getExtensionFilters().add(extFilter);
+
+		// Show save file dialog
+		File file = fileChooser.showSaveDialog(primaryStage);
 
 		Connection conn = main.conn;
 		System.out.println("verbinding gemaakt...");
 
 		Query q = new Query();
 		q.setEenheid();
-		
+
 		writeQ1ToCsv(conn, file, filePath, q);
 		writeQ2ToCsv(conn, file, filePath, q);
 		writeQ3ToCsv(conn, file, filePath, q);
@@ -57,12 +62,25 @@ public class cvsWriter {
 		writeQ9ToCsv(conn, file, filePath, q);
 		writeQ10ToCsv(conn, file, filePath, q);
 
+		dialog = new Alert(Alert.AlertType.INFORMATION);
+		dialog.setHeaderText(null);
+		dialog.setGraphic(null);
+		dialog.setTitle("Business Rules overgeschreven");
+		dialog.initOwner(primaryStage);
+		dialog.initStyle(StageStyle.UTILITY);
+		StackPane done = new StackPane();
+		Label donel = new Label("De business rules zijn overgeschreven.");
+		done.getChildren().add(donel);
+		dialog.getDialogPane().setContent(done);
+		dialog.showAndWait();
+
 	}
 
-        /*
-        Hier onder staan 10 methodes voor elke business rules, en hun eigen syntax, en hoe ze moeten worden overgeschreven naar een los bestand
-        */
-        
+	/*
+	 * Hier onder staan 10 methodes voor elke business rules, en hun eigen syntax,
+	 * en hoe ze moeten worden overgeschreven naar een los bestand
+	 */
+
 	public static void writeQ1ToCsv(Connection conn, File export, String filePath, Query q) {
 
 		String found;
@@ -85,14 +103,14 @@ public class cvsWriter {
 
 				pw.flush();
 				pw.close();
-//				JOptionPane.showMessageDialog(null, "Record saved");
 
 			} catch (Exception E) {
-//				JOptionPane.showMessageDialog(null, "Record not saved" + E);
+				ShowError();
+
 			}
 
 		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(null, "Er is een error gevonden\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -118,14 +136,13 @@ public class cvsWriter {
 
 				pw.flush();
 				pw.close();
-//				JOptionPane.showMessageDialog(null, "Record saved");
 
 			} catch (Exception E) {
-//				JOptionPane.showMessageDialog(null, "Record not saved" + E);
+				ShowError();
 			}
 
 		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(null, "Er is een error gevonden\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -151,14 +168,13 @@ public class cvsWriter {
 
 				pw.flush();
 				pw.close();
-//				JOptionPane.showMessageDialog(null, "Record saved");
 
 			} catch (Exception E) {
-//				JOptionPane.showMessageDialog(null, "Record not saved" + E);
+				ShowError();
 			}
 
 		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(null, "Er is een error gevonden\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -184,14 +200,13 @@ public class cvsWriter {
 
 				pw.flush();
 				pw.close();
-//				JOptionPane.showMessageDialog(null, "Record saved");
 
 			} catch (Exception E) {
-//				JOptionPane.showMessageDialog(null, "Record not saved" + E);
+				ShowError();
 			}
 
 		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(null, "Er is een error gevonden\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -216,15 +231,13 @@ public class cvsWriter {
 				}
 
 				pw.flush();
-				pw.close();
-//				JOptionPane.showMessageDialog(null, "Record saved");
 
 			} catch (Exception E) {
-//				JOptionPane.showMessageDialog(null, "Record not saved" + E);
+				ShowError();
 			}
 
 		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(null, "Er is een error gevonden\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -250,14 +263,13 @@ public class cvsWriter {
 
 				pw.flush();
 				pw.close();
-//				JOptionPane.showMessageDialog(null, "Record saved");
 
 			} catch (Exception E) {
-//				JOptionPane.showMessageDialog(null, "Record not saved" + E);
+				ShowError();
 			}
 
 		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(null, "Er is een error gevonden\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -283,14 +295,13 @@ public class cvsWriter {
 
 				pw.flush();
 				pw.close();
-//				JOptionPane.showMessageDialog(null, "Record saved");
 
 			} catch (Exception E) {
-//				JOptionPane.showMessageDialog(null, "Record not saved" + E);
+				ShowError();
 			}
 
 		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(null, "Er is een error gevonden\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -316,14 +327,13 @@ public class cvsWriter {
 
 				pw.flush();
 				pw.close();
-//				JOptionPane.showMessageDialog(null, "Record saved");
 
 			} catch (Exception E) {
-//				JOptionPane.showMessageDialog(null, "Record not saved" + E);
+				ShowError();
 			}
 
 		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(null, "Er is een error gevonden\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -349,14 +359,13 @@ public class cvsWriter {
 
 				pw.flush();
 				pw.close();
-//				JOptionPane.showMessageDialog(null, "Record saved");
 
 			} catch (Exception E) {
-//				JOptionPane.showMessageDialog(null, "Record not saved" + E);
+				ShowError();
 			}
 
 		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(null, "Er is een error gevonden\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -382,15 +391,28 @@ public class cvsWriter {
 
 				pw.flush();
 				pw.close();
-//				JOptionPane.showMessageDialog(null, "Record saved");
 
 			} catch (Exception E) {
-//				JOptionPane.showMessageDialog(null, "Record not saved" + E);
+				ShowError();
 			}
 
 		} catch (SQLException e) {
-//			JOptionPane.showMessageDialog(null, "Er is een error gevonden\
+			e.printStackTrace();
 		}
+	}
+
+	public static void ShowError() {
+		dialog.setAlertType(AlertType.ERROR);
+		dialog.setHeaderText(null);
+		dialog.setGraphic(null);
+		dialog.setTitle("Error bij overschrijven");
+		dialog.initOwner(Layout.window);
+		dialog.initStyle(StageStyle.UTILITY);
+		StackPane done = new StackPane();
+		Label donel = new Label("Er ging is fout bij het overschrijven naar het bestand.");
+		done.getChildren().add(donel);
+		dialog.getDialogPane().setContent(done);
+		dialog.showAndWait();
 	}
 
 }
