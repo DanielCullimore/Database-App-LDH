@@ -1,1 +1,3 @@
 jdbc:sqlserver://localhost:1433;databaseName=AuditBlackBox
+testAccount1
+Welkom01!

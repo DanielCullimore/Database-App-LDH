@@ -81,7 +81,6 @@ public class cvsWriter {
 				while (res.next()) {
 					found = res.getString("username_pre2000") + ",\n";
 					pw.println(found);
-					System.out.println(res.getString("username_pre2000"));
 				}
 
 				pw.flush();
@@ -115,7 +114,6 @@ public class cvsWriter {
 				while (res.next()) {
 					found = res.getString("EmployeeUsername") + ",\n";
 					pw.println(found);
-					System.out.println(res.getString("EmployeeUsername"));
 				}
 
 				pw.flush();
@@ -149,7 +147,6 @@ public class cvsWriter {
 				while (res.next()) {
 					found = res.getString("EmployeeUsername") + ",\n";
 					pw.println(found);
-					System.out.println(res.getString("EmployeeUsername"));
 				}
 
 				pw.flush();
@@ -183,7 +180,6 @@ public class cvsWriter {
 				while (res.next()) {
 					found = res.getString("Code") + ",\n";
 					pw.println(found);
-					System.out.println(res.getString("Code"));
 				}
 
 				pw.flush();
@@ -217,7 +213,6 @@ public class cvsWriter {
 				while (res.next()) {
 					found = res.getString("Code") + ",\n";
 					pw.println(found);
-					System.out.println(res.getString("Code"));
 				}
 
 				pw.flush();
@@ -251,7 +246,6 @@ public class cvsWriter {
 				while (res.next()) {
 					found = res.getString("Code") + ",\n";
 					pw.println(found);
-					System.out.println(res.getString("Code"));
 				}
 
 				pw.flush();
@@ -285,7 +279,6 @@ public class cvsWriter {
 				while (res.next()) {
 					found = res.getString("Username_Pre2000") + ",\n";
 					pw.println(found);
-					System.out.println(res.getString("Username_Pre2000"));
 				}
 
 				pw.flush();
@@ -319,7 +312,6 @@ public class cvsWriter {
 				while (res.next()) {
 					found = res.getString("EmployeeUsername") + ",\n";
 					pw.println(found);
-					System.out.println(res.getString("EmployeeUsername"));
 				}
 
 				pw.flush();
@@ -353,7 +345,6 @@ public class cvsWriter {
 				while (res.next()) {
 					found = res.getString("EmployeeUsername") + ",\n";
 					pw.println(found);
-					System.out.println(res.getString("EmployeeUsername"));
 				}
 
 				pw.flush();
@@ -387,7 +378,6 @@ public class cvsWriter {
 				while (res.next()) {
 					found = res.getString("Code") + ",\n";
 					pw.println(found);
-					System.out.println(res.getString("Code"));
 				}
 
 				pw.flush();

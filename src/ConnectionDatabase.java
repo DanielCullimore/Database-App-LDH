@@ -23,18 +23,21 @@ import java.sql.SQLException;
 
 public class ConnectionDatabase {
 	private static String url;
-	private static String username = "testAccount1";
-	private static String password = "Welkom01!";
+	private static String username;
+	private static String password;
 	private static Connection conn;
 
 	private static String singleUserLock;
 
         //Maak verbinding met database met de string uit het bestand connection.txt
 	public ConnectionDatabase() throws IOException {
-                String f = ConnectionDatabase.class.getResource("connection.txt").getPath();
-		InputStream is = new FileInputStream(f);
+//       String f = ConnectionDatabase.class.getResource("connection.txt").getPath();
+
+		InputStream is = new FileInputStream("src/connection.txt");
 		BufferedReader buf = new BufferedReader(new InputStreamReader(is));
 		this.url = buf.readLine();
+		this.username = buf.readLine();
+		this.password = buf.readLine();
 
 	}
 

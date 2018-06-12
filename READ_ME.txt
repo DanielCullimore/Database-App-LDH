@@ -19,4 +19,15 @@ Aantekenigen:
 		De Query voor de Impact Database is incompleet. We hadden de opdracht verkeerd begrepen, en daardoor ook verkeerd uitgevoerd. Onze excuses hiervoor. 
 
 	Laadscherm en printing:
-		Het laadscherm dat opkomt wanneer je de Business Rules aanlaat kan er voor zorgen dat sommige waardes niet mooi worden geprint in de bijbehorende text velden. Wanneer u opnieuw laadt, of op de textvelden klinkt zal dit het moeten verhelpen.
+		Het laadscherm dat opkomt wanneer je de Business Rules aanlaat kan er voor zorgen dat sommige waardes niet mooi worden geprint in de bijbehorende text velden. Wanneer u opnieuw laadt, of op de textvelden klinkt zal dit het moeten verhelpen
+
+	Connection String
+		In de applicatie is er mogelijkheid om de connection string aan te passen. Wanneer de connection String incorrect is, en je het programma opnieuw opstart wordt je door gestruurd naar een nieuw scherm om de connection string nog een keer in te vullen.
+
+	Admin Settings
+		Het proogramma kijkt naar de systeem user, en logt het programma aan de hand daarvan in op de Database. Alleen de gegevens van de beijbehoorende eennheid worden getoond. Als je wil inloggen als admin en alles wil zien, commente dan de regel 61 uit main (action.setEenheden(q);)
+
+	Signalen Database
+		We schrijven in de Applicatie ook Impact naar de Signalen Database. Vlak voor de deadline kwamen we er achter dat de dat niet de bedoeling was. Door tijddruk en de grote kans op errors hebben we besloten dit niet aan te passen. 
+
+		

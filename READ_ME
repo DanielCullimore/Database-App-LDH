@@ -26,3 +26,8 @@ Aantekenigen:
 
 	Admin Settings
 		Het proogramma kijkt naar de systeem user, en logt het programma aan de hand daarvan in op de Database. Alleen de gegevens van de beijbehoorende eennheid worden getoond. Als je wil inloggen als admin en alles wil zien, commente dan de regel 61 uit main (action.setEenheden(q);)
+
+	Signalen Database
+		We schrijven in de Applicatie ook Impact naar de Signalen Database. Vlak voor de deadline kwamen we er achter dat de dat niet de bedoeling was. Door tijddruk en de grote kans op errors hebben we besloten dit niet aan te passen. 
+
+		

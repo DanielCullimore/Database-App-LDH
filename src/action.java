@@ -21,13 +21,14 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
+import javafx.util.Pair;
 
 public class action {
 
 	static Connection conn;
 
-        
-        //Deze Methode schrijft alle businessrules naar het scherm, zodat je kan zien. Omdat dit redelijk lang duurt is er ook een laadscherm
+	// Deze Methode schrijft alle businessrules naar het scherm, zodat je kan zien.
+	// Omdat dit redelijk lang duurt is er ook een laadscherm
 	public static void writeRules(TextArea a, Window window, Stage primaryStage) {
 
 		conn = main.conn;
@@ -79,28 +80,33 @@ public class action {
 		Layout.impact.setDisable(false);
 
 	}
-	
-        //Deze methode wordt gebruikt om de sting in het connection.txt bestand aan te passen. Dit gaat aan de hand van een Dialogue scherm
-	public static void changeString(Dialog<String> dialog) throws IOException {
 
-		Optional<String> s = dialog.showAndWait();
+	// Deze methode wordt gebruikt om de sting in het connection.txt bestand aan te
+	// passen. Dit gaat aan de hand van een Dialogue scherm
+	public static void changeString(Dialog<Pair<Pair<String, String>, String>> dialog) throws IOException {
+
+		Optional<Pair<Pair<String, String>, String>> s = dialog.showAndWait();
 		PrintWriter pw = null;
 
 		try {
-                        String f = ConnectionDatabase.class.getResource("connection.txt").getPath();
-			pw = new PrintWriter(f);
+//			String f = ConnectionDatabase.class.getResource("connection.txt").getPath();
+			pw = new PrintWriter("src/connection.txt");
 			BufferedWriter bw = new BufferedWriter(pw);
 
 			try {
-				bw.write(s.get());
+				bw.write(s.get().getKey().getKey());
+				bw.newLine();
+				bw.write(s.get().getKey().getValue());
+				bw.newLine();
+				bw.write(s.get().getValue());
+				bw.newLine();
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setTitle("Connection String aangepast");
 				alert.setHeaderText(null);
 				alert.setContentText("De connection String is aangepast. \n Start het programma opniew op.");
 				alert.initOwner(Layout.window);
-				
-				alert.showAndWait();
 
+				alert.showAndWait();
 
 			} catch (NoSuchElementException e) {
 
@@ -113,16 +119,16 @@ public class action {
 			e.printStackTrace();
 			pw.close();
 
-		} 
+		}
 	}
 
-        //Deze methode verwijst door naar het schrijven naar cvs
+	// Deze methode verwijst door naar het schrijven naar cvs
 	public static void write(Stage primaryStage) {
 		cvsWriter.write(primaryStage);
 
 	}
 
-        //Deze methode laaat de gevens voor impact, ne zet ze in de een tabel
+	// Deze methode laaat de gevens voor impact, ne zet ze in de een tabel
 	public static void setImpactTable(Stage primaryStage) {
 		conn = main.conn;
 		ObservableList<Gebruiker> g = FXCollections.observableArrayList();
@@ -130,55 +136,50 @@ public class action {
 		Statement stat;
 		try {
 			stat = conn.createStatement();
-                        String q = "";
-                        
-                        //Als de gebruiker een admin is, moet hij alles te zien krijgen, dus moet de WHere clause van werkeenheid niet in de query zitten
-                        
-                        if (main.q.werkeenheidProfit != ""){
-                            System.out.println(main.q.werkeenheidProfit + " Wat dit i");
-                        
-			q = "SELECT PC.Code, PC.PersoonID, count(A.GewijzigdDoor) as aantal_Activiteit "
-					+ "  FROM [AuditBlackBox].[dbo].[Activiteit] A "
-					+ "  join Persoon P on P.MedewerkerID = A.GewijzigdDoor "
-					+ "  join PersoonCodes PC on PC.PersoonID = P.ID "
-					+ "  join [AfasProfit-Export] AP on AP.EmployeeUsername = PC.Code "
-					+ "  where AP.ContractEndDate < GETDATE() AND AP.EmployerName = '" + main.q.werkeenheidProfit + "'"
-					+ " group by PC.Code, PC.PersoonID";
+			String q = "";
 
-                        } else{
-                            q = "SELECT PC.Code, PC.PersoonID, count(A.GewijzigdDoor) as aantal_Activiteit "
-					+ "  FROM [AuditBlackBox].[dbo].[Activiteit] A "
-					+ "  join Persoon P on P.MedewerkerID = A.GewijzigdDoor "
-					+ "  join PersoonCodes PC on PC.PersoonID = P.ID "
-					+ "  join [AfasProfit-Export] AP on AP.EmployeeUsername = PC.Code "
-					+ "  where AP.ContractEndDate < GETDATE() " 
-					+ " group by PC.Code, PC.PersoonID";
+			// Als de gebruiker een admin is, moet hij alles te zien krijgen, dus moet de
+			// WHere clause van werkeenheid niet in de query zitten
 
-                        }
-                        
-                        
+			if (main.q.werkeenheidProfit != "") {
+				System.out.println("Eenheid van gebruiker: " + main.q.werkeenheidProfit);
+
+				q = "SELECT PC.Code, PC.PersoonID, count(A.GewijzigdDoor) as aantal_Activiteit "
+						+ "  FROM [AuditBlackBox].[dbo].[Activiteit] A "
+						+ "  join Persoon P on P.MedewerkerID = A.GewijzigdDoor "
+						+ "  join PersoonCodes PC on PC.PersoonID = P.ID "
+						+ "  join [AfasProfit-Export] AP on AP.EmployeeUsername = PC.Code "
+						+ "  where AP.ContractEndDate < GETDATE() AND AP.EmployerName = '" + main.q.werkeenheidProfit
+						+ "'" + " group by PC.Code, PC.PersoonID";
+
+			} else {
+				q = "SELECT PC.Code, PC.PersoonID, count(A.GewijzigdDoor) as aantal_Activiteit "
+						+ "  FROM [AuditBlackBox].[dbo].[Activiteit] A "
+						+ "  join Persoon P on P.MedewerkerID = A.GewijzigdDoor "
+						+ "  join PersoonCodes PC on PC.PersoonID = P.ID "
+						+ "  join [AfasProfit-Export] AP on AP.EmployeeUsername = PC.Code "
+						+ "  where AP.ContractEndDate < GETDATE() " + " group by PC.Code, PC.PersoonID";
+
+			}
+
 			ResultSet res = stat.executeQuery(q);
 
 			while (res.next()) {
 				Gebruiker newGebruiker = new Gebruiker(res.getString("Code"), res.getString("PersoonID"),
 						res.getString("aantal_Activiteit"));
 				g.add(newGebruiker);
-				System.out.println("test");
 			}
 
 			Layout.impactTable.setItems(g);
 			Layout.toCvs.setDisable(false);
 			Layout.sDatabase.setDisable(false);
-			
+
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("Impact geladen");
 			alert.setHeaderText(null);
 			alert.setContentText("De Impact is geladen en in de tabel neergezet.");
 			alert.initOwner(primaryStage);
 			alert.showAndWait();
-			
-			
-			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -187,7 +188,6 @@ public class action {
 
 	}
 
-      
 	public static void setEenheden(Query q) {
 		q.setEenheid();
 	}
@@ -196,8 +196,7 @@ public class action {
 		Signaaldatabase.start(ps);
 	}
 
-        
-        //Bij het afslutien van de programma moet de verbinding worden verborken
+	// Bij het afslutien van de programma moet de verbinding worden verborken
 	public static void closeProgram() {
 		try {
 			java.sql.Statement stat = main.conn.createStatement();
@@ -212,11 +211,14 @@ public class action {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}	
+	}
 
-        /*
-        Hier onder staan de methodes voor het schrijven van de 10 businesss rules. ELke Rule heeft een losse syntax en wordt daarom in een losse methode geschreven. Wanneer de query klaar is wordt het het TextArea gezet, en in een Veld wordt het aantal overtreden getoond.
-        */
+	/*
+	 * Hier onder staan de methodes voor het schrijven van de 10 businesss rules.
+	 * ELke Rule heeft een losse syntax en wordt daarom in een losse methode
+	 * geschreven. Wanneer de query klaar is wordt het het TextArea gezet, en in een
+	 * Veld wordt het aantal overtreden getoond.
+	 */
 	public static void writeRule1(Connection con, TextArea a, Query q) {
 		// Business Rule 1:
 		// AD account onbekend in Profit
@@ -516,7 +518,7 @@ public class action {
 
 	}
 
-        //Aanmakne van de Thread die wordt gebruikt voor de rules
+	// Aanmakne van de Thread die wordt gebruikt voor de rules
 	public static Task<?> createRuler1(Connection conn, TextArea a) {
 		return new Task<Object>() {
 			@Override
@@ -544,6 +546,6 @@ public class action {
 	}
 
 	public static void errorString(String[] args) {
-		ErrorString.launch(ErrorString.class, args);		
+		ErrorString.launch(ErrorString.class, args);
 	}
 }

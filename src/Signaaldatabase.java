@@ -5,6 +5,11 @@
  * and open the template in the editor.
  */
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -23,8 +28,8 @@ import javafx.stage.StageStyle;
 
 /**
  *
- * @author Daniel Cullimore en Michiel Maas
- * Deze Class heeft alle queries die worden gebruikt om over te schrijven naar de Signaal Database
+ * @author Daniel Cullimore en Michiel Maas Deze Class heeft alle queries die
+ *         worden gebruikt om over te schrijven naar de Signaal Database
  */
 public class Signaaldatabase {
 	Statement stObj;
@@ -298,7 +303,7 @@ public class Signaaldatabase {
 		return query1 + query2 + query3;
 	}
 
-        //Leeg maken van de Database
+	// Leeg maken van de Database
 	public String emptyDB() {
 		String delete2 = "DELETE FROM afwijking ";
 		String delete3 = "DELETE FROM Impact ";
@@ -306,18 +311,24 @@ public class Signaaldatabase {
 		return delete2 + delete3 + delete1;
 	}
 
-        
-        //Omdat het overschrijven zo lang duurt wordt er een laadscherm getoond met een THread
-        //
+	// Omdat het overschrijven zo lang duurt wordt er een laadscherm getoond met een
+	// THread
+	//
 	public static void start(Stage primaryStage) {
 
 		try {
-			String connectionString = "jdbc:sqlserver://localhost:1433;databaseName=Signaaldatabase";
-			Connection conn = DriverManager.getConnection(connectionString, "testAccount1", "Welkom01!");
+
+			InputStream is = new FileInputStream("src/SignaalConnection.txt");
+			BufferedReader buf = new BufferedReader(new InputStreamReader(is));
+			String url = buf.readLine();
+			String username = buf.readLine();
+			String password = buf.readLine();
+
+			Connection conn = DriverManager.getConnection(url, username, password);
 			System.out.println("Verbinding gemaakt " + conn.getCatalog());
 			Task<?> writer1 = createWriter(conn);
 			Thread ThreadWriter = new Thread(writer1);
-			
+
 			Alert dialog = new Alert(Alert.AlertType.INFORMATION);
 			dialog.setHeaderText(null);
 			dialog.setGraphic(null);
@@ -357,16 +368,17 @@ public class Signaaldatabase {
 			});
 
 			ThreadWriter.start();
-			
-		} 
-		
-		
+
+		}
+
 		catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-        //Deze methode is de Thread die wordt gebruikt bij het overschrijven
+	// Deze methode is de Thread die wordt gebruikt bij het overschrijven
 	public static Task<?> createWriter(Connection conn) {
 		return new Task<Object>() {
 			@Override
@@ -401,13 +413,12 @@ public class Signaaldatabase {
 					stmt.executeUpdate();
 
 					return true;
-				}	
-				
-				
-				catch(SQLException e) {
-				e.printStackTrace();
+				}
 
-			}
+				catch (SQLException e) {
+					e.printStackTrace();
+
+				}
 				return null;
 
 			}

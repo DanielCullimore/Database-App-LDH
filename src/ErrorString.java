@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
@@ -21,6 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Pair;
 
 public class ErrorString extends Application {
 
@@ -63,11 +65,12 @@ public class ErrorString extends Application {
 		changeString.setMinSize(300, 100);
 
 		// Change String Dialogue
-		Dialog<String> dialog = new Dialog<>();
+		Dialog<Pair<Pair<String, String>, String>> dialog = new Dialog<>();
 		dialog.setTitle("Aanpassen van de Connection String");
 		ButtonType urlSet = new ButtonType("Pas Aan", ButtonData.OK_DONE);
 		dialog.getDialogPane().getButtonTypes().addAll(urlSet, ButtonType.CANCEL);
 		dialog.initStyle(StageStyle.UTILITY);
+		primaryStage.getIcons().add(logo);
 
 		
 		
@@ -87,28 +90,47 @@ public class ErrorString extends Application {
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 150, 10, 10));
 
-		String prompt = "";
+		String promptURL = "";
+		String promptUsername = "";
+		String promptPassword = "";
 
 		try {
 			InputStream is = new FileInputStream("src/connection.txt");
 			BufferedReader buf = new BufferedReader(new InputStreamReader(is));
-			prompt = buf.readLine();
+			promptURL = buf.readLine();
+			promptUsername = buf.readLine();
+			promptPassword = buf.readLine();
 		} catch (IOException e) {
 
 		}
 
 		TextField URL = new TextField();
-		URL.setText(prompt);
+		URL.setText(promptURL);
 		URL.setMinWidth(400);
-
 		grid.add(new Label("URL:"), 0, 0);
 		grid.add(URL, 1, 0);
+		
+		TextField Username = new TextField();
+		Username.setText(promptUsername);
+		Username.setMinWidth(400);
+		grid.add(new Label("Username:"), 0, 1);
+		grid.add(Username, 1, 1);
+		
+		PasswordField Password = new PasswordField();
+		Password.setText(promptPassword);
+		Password.setMinWidth(400);		
+		grid.add(new Label("Password:"), 0, 2);
+		grid.add(Password, 1, 2);
+
+		
 
 		dialog.getDialogPane().setContent(grid);
 
 		dialog.setResultConverter(dialogButton -> {
 			if (dialogButton == urlSet) {
-				return new String(URL.getText());
+				Pair<String, String> first = new Pair<>(URL.getText(), Username.getText());
+				Pair<Pair<String, String>, String> second = new Pair<>(first, Password.getText());
+				return second;
 			}
 			return null;
 		});
