@@ -1,3 +1,4 @@
+import java.awt.Event;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -307,7 +308,8 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		dialog = new Dialog<>();
 		dialog.setTitle("Aanpassen van de Connection String");
 		ButtonType urlSet = new ButtonType("Pas Aan", ButtonData.OK_DONE);
-		dialog.getDialogPane().getButtonTypes().addAll(urlSet, ButtonType.CANCEL);
+		ButtonType stop = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+		dialog.getDialogPane().getButtonTypes().addAll(urlSet, stop);
 		dialog.initStyle(StageStyle.UTILITY);
 
 		GridPane grid = new GridPane();
@@ -376,6 +378,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		primaryStage.setResizable(false);
 
 	}
+
 
 	@Override
 	public void handle(ActionEvent event) {

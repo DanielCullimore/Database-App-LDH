@@ -89,7 +89,7 @@ public class action {
 		PrintWriter pw = null;
 
 		try {
-//			String f = ConnectionDatabase.class.getResource("connection.txt").getPath();
+			// String f = ConnectionDatabase.class.getResource("connection.txt").getPath();
 			pw = new PrintWriter("src/connection.txt");
 			BufferedWriter bw = new BufferedWriter(pw);
 
@@ -108,16 +108,16 @@ public class action {
 
 				alert.showAndWait();
 
-			} catch (NoSuchElementException e) {
-
-			} finally {
 				bw.flush();
 				bw.close();
+				pw.close();
+
+			} catch (NoSuchElementException e) {
+
 			}
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			pw.close();
 
 		}
 	}
@@ -548,4 +548,5 @@ public class action {
 	public static void errorString(String[] args) {
 		ErrorString.launch(ErrorString.class, args);
 	}
+
 }
