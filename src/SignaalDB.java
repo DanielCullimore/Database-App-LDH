@@ -31,7 +31,7 @@ import javafx.stage.StageStyle;
  * @author Daniel Cullimore en Michiel Maas Deze Class heeft alle queries die
  *         worden gebruikt om over te schrijven naar de Signaal Database
  */
-public class Signaaldatabase {
+public class SignaalDB {
 	Statement stObj;
 	Connection conn;
 
@@ -385,7 +385,7 @@ public class Signaaldatabase {
 			protected Object call() throws Exception {
 
 				try {
-					Signaaldatabase dat = new Signaaldatabase();
+					SignaalDB dat = new SignaalDB();
 					System.out.println(dat.insertData());
 					PreparedStatement stmt = conn.prepareStatement(dat.updateFK());
 					stmt.executeUpdate();

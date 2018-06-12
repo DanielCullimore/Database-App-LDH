@@ -1,10 +1,10 @@
-import java.awt.Event;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Optional;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,7 +13,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -22,6 +21,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -31,11 +31,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
-import javafx.scene.paint.Color;
 /*
  * Author: Michiel Maas
  * Deze class set de layout van het laat scherm. Eerste maakt het alle Elements aan, en daarna worden ze ingezet
@@ -87,7 +87,7 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 	static TextArea rapportText;
 
 	// Impact
-	static TableView<Gebruiker> impactTable;
+	static TableView<User> impactTable;
 	static Button impact;
 
 	// Right
@@ -253,15 +253,15 @@ public class Layout extends Application implements EventHandler<ActionEvent> {
 		impact.setDisable(true);
 		GridPane.setConstraints(impact, 7, 0, 5, 1);
 
-		TableColumn<Gebruiker, String> usernameCol = new TableColumn<>("Gebruikersnaam");
+		TableColumn<User, String> usernameCol = new TableColumn<>("Gebruikersnaam");
 		usernameCol.setMinWidth(200);
 		usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
 
-		TableColumn<Gebruiker, String> idCol = new TableColumn<>("ID");
+		TableColumn<User, String> idCol = new TableColumn<>("ID");
 		idCol.setMinWidth(200);
 		idCol.setCellValueFactory(new PropertyValueFactory<>("userID"));
 
-		TableColumn<Gebruiker, String> numberCol = new TableColumn<>("Aantal overtredingen");
+		TableColumn<User, String> numberCol = new TableColumn<>("Aantal overtredingen");
 		numberCol.setMinWidth(200);
 		numberCol.setCellValueFactory(new PropertyValueFactory<>("aantalOvertredingen"));
 

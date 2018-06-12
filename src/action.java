@@ -131,7 +131,7 @@ public class action {
 	// Deze methode laaat de gevens voor impact, ne zet ze in de een tabel
 	public static void setImpactTable(Stage primaryStage) {
 		conn = main.conn;
-		ObservableList<Gebruiker> g = FXCollections.observableArrayList();
+		ObservableList<User> g = FXCollections.observableArrayList();
 
 		Statement stat;
 		try {
@@ -165,7 +165,7 @@ public class action {
 			ResultSet res = stat.executeQuery(q);
 
 			while (res.next()) {
-				Gebruiker newGebruiker = new Gebruiker(res.getString("Code"), res.getString("PersoonID"),
+				User newGebruiker = new User(res.getString("Code"), res.getString("PersoonID"),
 						res.getString("aantal_Activiteit"));
 				g.add(newGebruiker);
 			}
@@ -193,7 +193,7 @@ public class action {
 	}
 
 	public static void writeSDatabase(Stage ps) {
-		Signaaldatabase.start(ps);
+		SignaalDB.start(ps);
 	}
 
 	// Bij het afslutien van de programma moet de verbinding worden verborken

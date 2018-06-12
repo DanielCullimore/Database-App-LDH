@@ -9,13 +9,13 @@
  * @author Rowan
  * Dit is een Class van de Gebruiekr, deze wordt gebruikt om de gevens in de Tabel van de impact te laten zien
  */
-public class Gebruiker {
+public class User {
     private String username;
     private String userID;
     private String aantalOvertredingen;
     
     
-    public Gebruiker(String username, String userID, String aantalOvertredingen) {
+    public User(String username, String userID, String aantalOvertredingen) {
 		super();
 		this.username = username;
 		this.userID = userID;
